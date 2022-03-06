@@ -101,7 +101,7 @@ export class CMCp {
         });
       }
 
-    async setLEDMode(mode) {
+    async setLEDMode(mode, brightness=0xff, red=0xff, green=0xff, blue=0xff, ledSpeed=0x04) {
         let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
 
@@ -172,24 +172,25 @@ export class CMCp {
         transferBuffer[8]  = 0x00
 
         if (mode === LED_CYCLE_ENUM['static']) { // done
-            transferBuffer[9]  = 0x01
+            transferBuffer[9]  = 0x01 // not sure but if changed no lights
             transferBuffer[11] = 0xc1
-            transferBuffer[16] = 0xd9
-            transferBuffer[17] = 0x52
-            transferBuffer[18] = 0xff
-            transferBuffer[19] = 0xff
+            transferBuffer[15] = 0xda // not sure but can change
+            transferBuffer[16] = red // red
+            transferBuffer[17] = green // green
+            transferBuffer[18] = blue // blue
+            transferBuffer[19] = brightness // 0xff // this is the brightness bit ff is full bright
             
             await this.commandTransfer(transferBuffer);
             await this.interruptTransfer(rxBuffer);
-        } else if (mode === LED_CYCLE_ENUM['rainbow wave']) { //done
+        } else if (mode === LED_CYCLE_ENUM['rainbow wave']) { //done?? looks like breathing
             transferBuffer[9]  = 0x32
             transferBuffer[11] = 0xc1
             transferBuffer[12] = 0x07
-            transferBuffer[16] = 0xff
-            transferBuffer[17] = 0xff
-            transferBuffer[18] = 0xff
-            transferBuffer[19] = 0xff
-            transferBuffer[22] = 0x06
+            transferBuffer[16] = red
+            transferBuffer[17] = green
+            transferBuffer[18] = blue
+            transferBuffer[19] = brightness // not sure
+            transferBuffer[22] = ledSpeed//0x06
             
             await this.commandTransfer(transferBuffer);
             await this.interruptTransfer(rxBuffer);
@@ -260,34 +261,47 @@ export class CMCp {
             transferBuffer[12] = 0xff
             transferBuffer[18] = 0xff
             transferBuffer[19] = 0xff
-            transferBuffer[24] = 0xd7
-            transferBuffer[25] = 0x52
-            transferBuffer[26] = 0xff
-            transferBuffer[27] = 0xff
-            transferBuffer[28] = 0xff
-            transferBuffer[30] = 0xff
-            transferBuffer[31] = 0xff
-            transferBuffer[33] = 0xff
-            transferBuffer[34] = 0xff
-            transferBuffer[36] = 0xff
-            transferBuffer[39] = 0xff
-            transferBuffer[40] = 0xff
-            transferBuffer[42] = 0xff
-            transferBuffer[43] = 0xff
-            transferBuffer[45] = 0xff
-            transferBuffer[46] = 0xff
-            transferBuffer[48] = 0xff
-            transferBuffer[49] = 0xff
-            transferBuffer[51] = 0xff
-            transferBuffer[52] = 0xff
+            transferBuffer[24] = 0x00 // 1 red
+            transferBuffer[25] = 0xff // 1 green
+            transferBuffer[26] = 0x00 // 1 blue
+            transferBuffer[27] = 0x00 // 6 red
+            transferBuffer[28] = 0x00 // 6 green
+            transferBuffer[29] = 0xff // 6 blue
+            transferBuffer[30] = 0x00 // 11 red
+            transferBuffer[31] = 0x00 // 11 green
+            transferBuffer[32] = 0xff // 11 blue
+            transferBuffer[33] = 0xff // 16 r
+            transferBuffer[34] = 0xff // 16 g
+            transferBuffer[35] = 0xff // 16 b
+            transferBuffer[36] = 0xff // 21 r
+            transferBuffer[37] = 0xff // 21 g
+            transferBuffer[38] = 0xff // 21 b
+            transferBuffer[39] = 0xff // 2 r
+            transferBuffer[40] = 0xff // 2 g
+            transferBuffer[41] = 0xff // 2 b
+            transferBuffer[42] = 0xff // 7 r
+            transferBuffer[43] = 0xff // 7 g
+            transferBuffer[44] = 0xff // 7 b
+            transferBuffer[45] = 0xff // 12 r
+            transferBuffer[46] = 0xff // 12 g
+            transferBuffer[47] = 0xff // 12 b
+            transferBuffer[48] = 0xff // 17 r
+            transferBuffer[49] = 0xff // 17 g
+            transferBuffer[50] = 0xff // 17 b
+            transferBuffer[51] = 0xff // 22 r
+            transferBuffer[52] = 0xff // 22 g
+            transferBuffer[53] = 0xff // 22 b
 
-            transferBuffer[54] = 0xff
-            transferBuffer[55] = 0xff
-            transferBuffer[57] = 0xff
-            transferBuffer[58] = 0xff
-            transferBuffer[60] = 0xff
-            transferBuffer[61] = 0xff
-            transferBuffer[63] = 0xff
+            transferBuffer[54] = 0xff // 3 r
+            transferBuffer[55] = 0xff // 3 g
+            transferBuffer[56] = 0xff // 3 b
+            transferBuffer[57] = 0xff // 8 r
+            transferBuffer[58] = 0xff // 8 g
+            transferBuffer[59] = 0xff // 8 b
+            transferBuffer[60] = 0xff // 13 r
+            transferBuffer[61] = 0xff // 13 g
+            transferBuffer[62] = 0xff // 13 b
+            transferBuffer[63] = 0x00 // 18 r
 
 
             
@@ -299,28 +313,40 @@ export class CMCp {
             transferBuffer[0] = 0x56
             transferBuffer[1] = 0x83
             transferBuffer[2] = 0x01
-            transferBuffer[4] = 0xff
+            transferBuffer[4] = 0x00 // 18 g
+            transferBuffer[5] = 0xff // 18 b
 
-            transferBuffer[6] = 0xff
-            transferBuffer[7] = 0xff
-            transferBuffer[9] = 0xff
-            transferBuffer[10] = 0xff
-            transferBuffer[12] = 0xff
-            transferBuffer[13] = 0xff
-            transferBuffer[15] = 0xff
-            transferBuffer[16] = 0xff
-            transferBuffer[18] = 0xff
-            transferBuffer[19] = 0xff
-            transferBuffer[21] = 0xff
-            transferBuffer[22] = 0xff
-            transferBuffer[24] = 0xff
-            transferBuffer[25] = 0xff
-            transferBuffer[27] = 0xff
-            transferBuffer[28] = 0xff
-            transferBuffer[30] = 0xff
-            transferBuffer[31] = 0xff
-            transferBuffer[33] = 0xff
-            transferBuffer[34] = 0xff
+            transferBuffer[6] = 0xff // 23 r
+            transferBuffer[7] = 0xff // 23 g
+            transferBuffer[8] = 0xff // 23 b
+            transferBuffer[9] = 0xff // 4 r
+            transferBuffer[10] = 0xff // 4 g
+            transferBuffer[11] = 0xff // 4 b
+            transferBuffer[12] = 0xff // 9 r
+            transferBuffer[13] = 0xff // 9 g
+            transferBuffer[14] = 0xff // 9 b
+            transferBuffer[15] = 0xff // 14 r
+            transferBuffer[16] = 0xff // 14 g
+            transferBuffer[17] = 0xff // 14 b
+            transferBuffer[18] = 0xff // 19 r
+            transferBuffer[19] = 0xff // 19 g
+            transferBuffer[20] = 0xff // 19 b
+            transferBuffer[21] = 0xff // 24 r
+            transferBuffer[22] = 0xff // 24 g
+            transferBuffer[23] = 0xff // 24 b
+            transferBuffer[24] = 0xff // 5 r
+            transferBuffer[25] = 0xff // 5 g
+            transferBuffer[26] = 0xff // 5 b
+            transferBuffer[27] = 0xff // 10 R
+            transferBuffer[28] = 0xff // 10 G
+            transferBuffer[29] = 0xff // 10 B
+            transferBuffer[30] = 0xff // 15 r
+            transferBuffer[31] = 0xff // 15 g
+            transferBuffer[32] = 0xff // 15 b
+            transferBuffer[33] = 0xff // 20 r
+            transferBuffer[34] = 0xff // 20 g
+            transferBuffer[35] = 0xff // 20 b
+            
             await this.commandTransfer(transferBuffer);
             await this.interruptTransfer(rxBuffer);
         } else if (mode === LED_CYCLE_ENUM['stars']) { // done with fix
@@ -397,10 +423,11 @@ export class CMCp {
             transferBuffer[9]  = 0x31
             transferBuffer[11] = 0xc1
             transferBuffer[12] = 0x08
-            transferBuffer[16] = 0x40
-            transferBuffer[18] = 0xff
-            transferBuffer[19] = 0xff
-            transferBuffer[22] = 0x03
+            transferBuffer[16] = red//0x40 // red
+            // transferBuffer[17] = green // green
+            transferBuffer[18] = blue // blue
+            transferBuffer[19] = brightness
+            transferBuffer[22] = ledSpeed//0x03
             
             await this.commandTransfer(transferBuffer);
             await this.interruptTransfer(rxBuffer);
@@ -408,16 +435,16 @@ export class CMCp {
             transferBuffer[9]  = 0x30
             transferBuffer[11] = 0xc1
             transferBuffer[12] = 0x0c
-            transferBuffer[16] = 0xff
-            transferBuffer[17] = 0xff
-            transferBuffer[18] = 0xff
-            transferBuffer[19] = 0xff
-            transferBuffer[20] = 0x01
-            transferBuffer[22] = 0x04
+            transferBuffer[16] = red
+            transferBuffer[17] = green
+            transferBuffer[18] = blue
+            transferBuffer[19] = brightness
+            transferBuffer[20] = 0x01 // changes breathing patterns and colors // 00 color cycles 01 breaths 02 breaths and color cycles in strange pattern 03 breaths and color cycles on breadth
+            transferBuffer[22] = ledSpeed // breathing speed 0x0f fast 0x00 slow 0xff so fast you cant see
             
             await this.commandTransfer(transferBuffer);
             await this.interruptTransfer(rxBuffer);
-        } else if (mode === LED_CYCLE_ENUM['reactive punch']) { // Doesnt work IDK Why
+        } else if (mode === LED_CYCLE_ENUM['reactive punch']) { // Done
             transferBuffer[0]  = 0x56
             transferBuffer[1]  = 0x83
             transferBuffer[4]  = 0x0b
@@ -452,9 +479,12 @@ export class CMCp {
             transferBuffer[9]  = 0x34
             transferBuffer[11] = 0xc1
             transferBuffer[12] = 0x04
-            transferBuffer[18] = 0xff
-            transferBuffer[19] = 0xff
-            transferBuffer[22] = 0xfd
+            // 16 17 18 determines which color to start with? if activate all then no color change?
+            // transferBuffer[16] = red
+            // transferBuffer[17] = green
+            transferBuffer[18] = blue
+            transferBuffer[19] = brightness
+            transferBuffer[22] = ledSpeed// 0b11101111//0x0d // LED speed and ?direction? xf is as slow, x0 is as fast
             
             await this.commandTransfer(transferBuffer);
             await this.interruptTransfer(rxBuffer);
@@ -462,11 +492,15 @@ export class CMCp {
             transferBuffer[9]  = 0x83
             transferBuffer[11] = 0xc1
             transferBuffer[12] = 0x04
-            transferBuffer[18] = 0xff
-            transferBuffer[19] = 0xff
-            transferBuffer[22] = 0xfd
-            transferBuffer[25] = 0x80
-            transferBuffer[27] = 0x10
+            // 16 17 18 determines which color to start with? if activate all then no color change?
+            // transferBuffer[16] = red
+            // transferBuffer[17] = green
+            transferBuffer[18] = blue
+            transferBuffer[19] = brightness
+            transferBuffer[22] = ledSpeed//0xfd
+            transferBuffer[25] = 0xff // these determine patterns somehow
+            // transferBuffer[26] = 0xff // these determine patterns somehow
+            transferBuffer[27] = 0x10 // these determine patterns somehow
 
             await this.commandTransfer(transferBuffer);
             await this.interruptTransfer(rxBuffer);
