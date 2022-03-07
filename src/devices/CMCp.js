@@ -101,7 +101,7 @@ export class CMCp {
         });
       }
 
-    async setLEDMode(mode, brightness=0xff, red=0xff, green=0xff, blue=0xff, ledSpeed=0x04) {
+    async setLEDMode(mode, brightness=0xff, red=0xff, green=0xff, blue=0xff, ledSpeed=0x04, testingNumber=-1) {
         let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
 
@@ -207,25 +207,26 @@ export class CMCp {
             transferBuffer[35] = 0x80
             transferBuffer[36] = 0x0b
             transferBuffer[37] = 0x10
-            transferBuffer[40] = 0xff
-            transferBuffer[41] = 0xff
-            transferBuffer[42] = 0xff
-            transferBuffer[43] = 0xff
-            transferBuffer[46] = 0x02
-            transferBuffer[47] = 0x01
-            transferBuffer[48] = 0x03
-            transferBuffer[52] = 0xff
-            transferBuffer[53] = 0xff
+            transferBuffer[40] = red // red
+            transferBuffer[41] = green // green
+            transferBuffer[42] = blue // blue
+            transferBuffer[43] = brightness // brightness
+            transferBuffer[46] = ledSpeed//0x02
+            transferBuffer[47] = 0x01 // light reflex? 0x01 default
+            transferBuffer[48] = 0x03//0x03 // spread size 0 no spread 01 vertical only 02 horizontal only 3 both
+            transferBuffer[52] = 0xff // nothing?
+            transferBuffer[53] = 0xff // nothing?
             transferBuffer[54] = 0xff
             transferBuffer[55] = 0xff
             transferBuffer[56] = 0xff
             transferBuffer[57] = 0xff
-            transferBuffer[58] = 0xff
+            transferBuffer[58] = 0xff // controls if the reaches 9 14 19 24 5 10 15 and 20
             transferBuffer[59] = 0xff
 
             await this.commandTransfer(transferBuffer);
             await this.interruptTransfer(rxBuffer);
         } else if (mode === LED_CYCLE_ENUM['reactive fade']) { // done with fix
+            // could not find other initial colors besides blue
             transferBuffer[4]  = 0x0c
             transferBuffer[6]  = 0x0c
             transferBuffer[8]  = 0x03
@@ -234,16 +235,16 @@ export class CMCp {
             transferBuffer[17] = 0x01
             transferBuffer[19] = 0xc1
             transferBuffer[26] = 0xc6
-            transferBuffer[27] = 0xff
+            transferBuffer[27] = 0xff // initial blue
             transferBuffer[33] = 0x80
             transferBuffer[35] = 0x80
             transferBuffer[36] = 0x0b
             transferBuffer[37] = 0x10
-            transferBuffer[40] = 0xff
-            transferBuffer[41] = 0xff
-            transferBuffer[42] = 0xff
-            transferBuffer[43] = 0xff
-            transferBuffer[46] = 0x02
+            transferBuffer[40] = red // red
+            transferBuffer[41] = green // green
+            transferBuffer[42] = blue // blue
+            transferBuffer[43] = brightness
+            transferBuffer[46] = ledSpeed //0x02 // led speed
             transferBuffer[52] = 0xff
             transferBuffer[53] = 0xff
             transferBuffer[54] = 0xff
@@ -346,7 +347,7 @@ export class CMCp {
             transferBuffer[33] = 0xff // 20 r
             transferBuffer[34] = 0xff // 20 g
             transferBuffer[35] = 0xff // 20 b
-            
+
             await this.commandTransfer(transferBuffer);
             await this.interruptTransfer(rxBuffer);
         } else if (mode === LED_CYCLE_ENUM['stars']) { // done with fix
@@ -362,11 +363,11 @@ export class CMCp {
             transferBuffer[35] = 0x80
             transferBuffer[36] = 0x08
             transferBuffer[37] = 0x10
-            transferBuffer[40] = 0xff
-            transferBuffer[41] = 0xff
-            transferBuffer[42] = 0xff
-            transferBuffer[43] = 0xff
-            transferBuffer[46] = 0x01
+            transferBuffer[40] = red
+            transferBuffer[41] = green
+            transferBuffer[42] = blue
+            transferBuffer[43] = brightness
+            transferBuffer[46] = ledSpeed // 0x01
             transferBuffer[48] = 0x01
             transferBuffer[49] = 0x10
             transferBuffer[50] = 0x08
@@ -397,11 +398,11 @@ export class CMCp {
             transferBuffer[35] = 0x80
             transferBuffer[36] = 0x05
             transferBuffer[37] = 0x10
-            transferBuffer[40] = 0xff
-            transferBuffer[41] = 0xff
-            transferBuffer[42] = 0xff
-            transferBuffer[43] = 0xff
-            transferBuffer[46] = 0x03
+            transferBuffer[40] = red
+            transferBuffer[41] = green
+            transferBuffer[42] = blue
+            transferBuffer[43] = brightness
+            transferBuffer[46] = ledSpeed // 0x03
             transferBuffer[48] = 0x30
             transferBuffer[49] = 0xff
             transferBuffer[50] = 0x10
@@ -460,10 +461,11 @@ export class CMCp {
             transferBuffer[35] = 0x80
             transferBuffer[36] = 0x07
             transferBuffer[37] = 0x10
-            transferBuffer[40] = 0b11111111//0xff // This changes the forgound color from black to red
-            // first for digits are brightness, last 4 are unknown
-            transferBuffer[43] = 0xff
-            transferBuffer[46] = 0x01
+            transferBuffer[40] = red
+            transferBuffer[41] = green
+            transferBuffer[42] = blue
+            transferBuffer[43] = brightness
+            transferBuffer[46] = ledSpeed//0x01
             transferBuffer[48] = 0xff
             transferBuffer[49] = 0xff
             transferBuffer[50] = 0xff
@@ -518,11 +520,11 @@ export class CMCp {
             transferBuffer[35] = 0x80
             transferBuffer[36] = 0x0c
             transferBuffer[37] = 0x10
-            transferBuffer[40] = 0xff // the first part changes color saturation
-            transferBuffer[41] = 0xff
-            transferBuffer[42] = 0xff
-            transferBuffer[43] = 0xff
-            transferBuffer[46] = 0x06
+            transferBuffer[40] = red
+            transferBuffer[41] = green
+            transferBuffer[42] = blue
+            transferBuffer[43] = brightness
+            transferBuffer[46] = ledSpeed//0x06
             transferBuffer[49] = 0x90
             transferBuffer[50] = 0x14
             transferBuffer[51] = 0x20
