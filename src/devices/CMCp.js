@@ -54,6 +54,7 @@ export class CMCp {
     commandEp;
     interruptEp;
     iFace;
+    currentMode;
 
     constructor() {
         this.device = usb.findByIds(VID, PID)
@@ -522,6 +523,572 @@ export class CMCp {
         
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
+
+        this.currentMode = mode;
+    }
+
+    async applyLEDModes() {
+        // OUT 1
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x04
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // out 2
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x01 // this means its the second call
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x0a
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // out 3
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x02
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x16
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // out 4
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x03
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x22
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // out 5
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x04
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x3f
+        transferBuffer[8] = 0xbb
+        transferBuffer[9] = 0xbb
+        transferBuffer[10] = 0xbb
+        transferBuffer[11] = 0xbb
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // out 6
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x05
+        transferBuffer[4] = 0x03
+        transferBuffer[6] = 0x4a
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // out 7
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x06
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x57
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 8
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x07
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x5f
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 9
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x08
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x65
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 10
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x09
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x6e
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 11
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x0a
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x77
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 12
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x0b
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x7e
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 13
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x0c
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x88
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 14
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x0d
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x8d
+        transferBuffer[8] = 0xaa
+        transferBuffer[9] = 0xaa
+        transferBuffer[10] = 0xaa
+        transferBuffer[11] = 0xaa
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 15 TODO This one sometimes changes with colors
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[5] = 0x01
+        transferBuffer[7] = 0xc1
+        transferBuffer[12] = 0xd9 // red??
+        transferBuffer[13] = 0x52 // green??
+        transferBuffer[14] = 0xff // blue??
+        transferBuffer[15] = 0xff // brightness??
+        transferBuffer[25] = 0x32
+        transferBuffer[27] = 0xc1
+        transferBuffer[28] = 0x07
+        transferBuffer[32] = 0xff
+        transferBuffer[33] = 0xff
+        transferBuffer[34] = 0xff
+        transferBuffer[35] = 0xff
+        transferBuffer[38] = 0x06
+        transferBuffer[41] = 0x04
+        transferBuffer[42] = 0x08
+        transferBuffer[44] = 0x05
+        transferBuffer[49] = 0x01
+        transferBuffer[51] = 0xc1
+        transferBuffer[59] = 0xff
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 16
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x01
+        transferBuffer[5] = 0x80
+        transferBuffer[7] = 0x80
+        transferBuffer[8] = 0x0b
+        transferBuffer[9] = 0x10
+        transferBuffer[12] = 0xff
+        transferBuffer[13] = 0xff
+        transferBuffer[14] = 0xff
+        transferBuffer[15] = 0xff
+        transferBuffer[18] = 0x02
+        transferBuffer[19] = 0x01
+        transferBuffer[20] = 0x03
+        transferBuffer[24] = 0xff
+        transferBuffer[25] = 0xff
+        transferBuffer[26] = 0xff
+        transferBuffer[27] = 0xff
+        transferBuffer[28] = 0xff
+        transferBuffer[29] = 0xff
+        transferBuffer[30] = 0xff
+        transferBuffer[31] = 0xff
+        transferBuffer[32] = 0x14
+        transferBuffer[34] = 0x14
+        transferBuffer[36] = 0x0b
+        transferBuffer[40] = 0x0f
+        transferBuffer[42] = 0x01
+        transferBuffer[45] = 0x01
+        transferBuffer[47] = 0xc1
+        transferBuffer[54] = 0xc6
+        transferBuffer[55] = 0xff
+        transferBuffer[61] = 0x80
+        transferBuffer[63] = 0x80
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 17
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x02
+        transferBuffer[4] = 0x0b
+        transferBuffer[5] = 0x10
+        transferBuffer[8] = 0xff
+        transferBuffer[9] = 0xff
+        transferBuffer[10] = 0xff
+        transferBuffer[11] = 0xff
+        transferBuffer[14] = 0x02
+        transferBuffer[20] = 0x14
+        transferBuffer[22] = 0x14
+        transferBuffer[24] = 0x19
+        transferBuffer[28] = 0x1d
+        transferBuffer[30] = 0x01
+        transferBuffer[32] = 0x80
+        transferBuffer[33] = 0x01
+        transferBuffer[36] = 0xff
+        transferBuffer[42] = 0xff
+        transferBuffer[43] = 0xff
+        transferBuffer[48] = 0xd7
+        transferBuffer[49] = 0x52
+        transferBuffer[50] = 0xff
+        transferBuffer[51] = 0xff
+        transferBuffer[52] = 0xff
+        transferBuffer[54] = 0xff
+        transferBuffer[55] = 0xff
+        transferBuffer[57] = 0xff
+        transferBuffer[58] = 0xff
+        transferBuffer[60] = 0xff
+        transferBuffer[63] = 0xff
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 18
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x03
+        transferBuffer[4] = 0xff
+        transferBuffer[6] = 0xff
+        transferBuffer[7] = 0xff
+        transferBuffer[9] = 0xff
+        transferBuffer[10] = 0xff
+        transferBuffer[12] = 0xff
+        transferBuffer[13] = 0xff
+        transferBuffer[15] = 0xff
+        transferBuffer[16] = 0xff
+        transferBuffer[18] = 0xff
+        transferBuffer[19] = 0xff
+        transferBuffer[21] = 0xff
+        transferBuffer[22] = 0xff
+        transferBuffer[24] = 0xff
+        transferBuffer[25] = 0xff
+        transferBuffer[27] = 0xff
+        transferBuffer[28] = 0xff
+        transferBuffer[30] = 0xff
+        transferBuffer[31] = 0xff
+        transferBuffer[33] = 0xff
+        transferBuffer[34] = 0xff
+        transferBuffer[36] = 0xff
+        transferBuffer[37] = 0xff
+        transferBuffer[39] = 0xff
+        transferBuffer[40] = 0xff
+        transferBuffer[42] = 0xff
+        transferBuffer[43] = 0xff
+        transferBuffer[45] = 0xff
+        transferBuffer[46] = 0xff
+        transferBuffer[48] = 0xff
+        transferBuffer[49] = 0xff
+        transferBuffer[51] = 0xff
+        transferBuffer[52] = 0xff
+        transferBuffer[54] = 0xff
+        transferBuffer[55] = 0xff
+        transferBuffer[57] = 0xff
+        transferBuffer[58] = 0xff
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 19
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x04
+        transferBuffer[16] = 0x25
+        transferBuffer[21] = 0x01
+        transferBuffer[23] = 0xc1
+        transferBuffer[31] = 0xff
+        transferBuffer[37] = 0x40
+        transferBuffer[39] = 0x80
+        transferBuffer[40] = 0x08
+        transferBuffer[41] = 0x10
+        transferBuffer[44] = 0xff
+        transferBuffer[45] = 0xff
+        transferBuffer[46] = 0xff
+        transferBuffer[47] = 0xff
+        transferBuffer[50] = 0x01
+        transferBuffer[52] = 0x01
+        transferBuffer[53] = 0x10
+        transferBuffer[54] = 0x08
+        transferBuffer[55] = 0x01
+        transferBuffer[56] = 0x10
+        transferBuffer[60] = 0x14
+        transferBuffer[62] = 0x14
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 20
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x05
+        transferBuffer[4] = 0x40
+        transferBuffer[8] = 0x44
+        transferBuffer[10] = 0x01
+        transferBuffer[13] = 0x01
+        transferBuffer[15] = 0xc1
+        transferBuffer[23] = 0xff
+        transferBuffer[28] = 0x81
+        transferBuffer[29] = 0x40
+        transferBuffer[31] = 0x80
+        transferBuffer[32] = 0x05
+        transferBuffer[33] = 0x10
+        transferBuffer[36] = 0xff
+        transferBuffer[37] = 0xff
+        transferBuffer[38] = 0xff
+        transferBuffer[39] = 0xff
+        transferBuffer[42] = 0x03
+        transferBuffer[44] = 0x30
+        transferBuffer[45] = 0xff
+        transferBuffer[46] = 0x10
+        transferBuffer[47] = 0x10
+        transferBuffer[48] = 0x01
+        transferBuffer[49] = 0x40
+        transferBuffer[52] = 0x14
+        transferBuffer[54] = 0x14
+        transferBuffer[56] = 0x4d
+        transferBuffer[60] = 0x51
+        transferBuffer[62] = 0x01
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 21
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x06
+        transferBuffer[5] = 0x31
+        transferBuffer[7] = 0xc1
+        transferBuffer[8] = 0x08
+        transferBuffer[12] = 0x40
+        transferBuffer[14] = 0xff
+        transferBuffer[15] = 0xff
+        transferBuffer[18] = 0x03
+        transferBuffer[24] = 0x5a
+        transferBuffer[29] = 0x30
+        transferBuffer[31] = 0xc1
+        transferBuffer[32] = 0x0c
+        transferBuffer[36] = 0xff
+        transferBuffer[37] = 0xff
+        transferBuffer[38] = 0xff
+        transferBuffer[39] = 0xff
+        transferBuffer[40] = 0x01
+        transferBuffer[42] = 0x04
+        transferBuffer[48] = 0x60
+        transferBuffer[53] = 0x01
+        transferBuffer[55] = 0xc1
+        transferBuffer[63] = 0xff
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 22
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x07
+        transferBuffer[8] = 0x28
+        transferBuffer[9] = 0x80
+        transferBuffer[11] = 0x80
+        transferBuffer[12] = 0x07
+        transferBuffer[13] = 0x10
+        transferBuffer[19] = 0xff
+        transferBuffer[22] = 0x01
+        transferBuffer[24] = 0x14
+        transferBuffer[26] = 0x14
+        transferBuffer[28] = 0x66
+        transferBuffer[32] = 0x6a
+        transferBuffer[34] = 0x01
+        transferBuffer[37] = 0x34
+        transferBuffer[39] = 0xc1
+        transferBuffer[40] = 0x04
+        transferBuffer[46] = 0xff
+        transferBuffer[47] = 0xff
+        transferBuffer[50] = 0xfd
+        transferBuffer[53] = 0x80
+        transferBuffer[56] = 0x30
+        transferBuffer[58] = 0x10
+        transferBuffer[60] = 0x71
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 23
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x08
+        transferBuffer[5] = 0x83
+        transferBuffer[7] = 0xc1
+        transferBuffer[8] = 0x04
+        transferBuffer[14] = 0xff
+        transferBuffer[15] = 0xff
+        transferBuffer[18] = 0xfd
+        transferBuffer[21] = 0x80
+        transferBuffer[24] = 0x30
+        transferBuffer[26] = 0x10
+        transferBuffer[28] = 0x78
+        transferBuffer[33] = 0x01
+        transferBuffer[35] = 0xc1
+        transferBuffer[43] = 0xff
+        transferBuffer[48] = 0x01
+        transferBuffer[49] = 0x82
+        transferBuffer[51] = 0x80
+        transferBuffer[52] = 0x0c
+        transferBuffer[53] = 0x10
+        transferBuffer[56] = 0xff
+        transferBuffer[57] = 0xff
+        transferBuffer[58] = 0xff
+        transferBuffer[59] = 0xff
+        transferBuffer[62] = 0x06
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 24
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x09
+        transferBuffer[5] = 0x90
+        transferBuffer[6] = 0x14
+        transferBuffer[7] = 0x20
+        transferBuffer[8] = 0x14
+        transferBuffer[10] = 0x14
+        transferBuffer[12] = 0x7f
+        transferBuffer[16] = 0x83
+        transferBuffer[18] = 0x01
+        transferBuffer[20] = 0x10
+        transferBuffer[23] = 0xc1
+        transferBuffer[28] = 0x8b
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 25
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x0a
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 26
+        transferBuffer[0] = 0x41
+        transferBuffer[1] = 0x80
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 27
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x28
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 28
+        transferBuffer[0] = 0x41
+        transferBuffer[1] = 0x01
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 29
+        transferBuffer[0] = 0x50
+        transferBuffer[1] = 0x55
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 30
+        transferBuffer[0] = 0x41
+        // await this.commandTransfer(transferBuffer);
+        // await this.interruptTransfer(rxBuffer);
+
     }
 
     release () {
