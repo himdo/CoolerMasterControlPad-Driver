@@ -22,20 +22,20 @@ const MAX_PACKET_SIZE = 64
 
 const TIMEOUT = 1000
 export const LED_CYCLE_ENUM = {
-    'static': 0, // done
-    'rainbow wave': 1, //done
-    'crosshair': 2, // Done with fix to out 1
-    'reactive fade': 3, // Done with fix to out 1
-    'custom': 4, // done, with fix to out 1 and second send
-    'stars': 5, // done with fix to out 1
-    'snowing': 6, // done with fix to out 1
-    'color cycle': 7, //done
-    'breathing': 8, //done
-    'reactive punch': 9, // Not working IDK why
-    'circle spectrum': 10, //done
-    'reactive tornado': 11, //done
-    'water ripple': 12, // done with fix to out 1
-    'turn off': 13, //done
+    'static': 0, // Stic
+    'rainbow wave': 1, // Rb W
+    'crosshair': 2, // Ch
+    'reactive fade': 3, // R F
+    'custom': 4, // C
+    'stars': 5, // Srs
+    'snowing': 6, // Sw
+    'color cycle': 7, // CC
+    'breathing': 8, // Bing
+    'reactive punch': 9, // RP
+    'circle spectrum': 10, // CS
+    'reactive tornado': 11, //RT
+    'water ripple': 12, // WR
+    'turn off': 13, // Tf
 } 
 
 const SIMPLE_LED_CYCLE = [
@@ -547,7 +547,7 @@ export class CMCp {
         // out 2
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x15
-        transferBuffer[2] = 0x01 // this means its the second call
+        transferBuffer[2] = 0x01
         transferBuffer[4] = 0x01
         transferBuffer[6] = 0x0a
         transferBuffer[8] = 0x55
@@ -600,8 +600,8 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x05
-        transferBuffer[4] = 0x03 // 02 for rainbow wave
-        transferBuffer[6] = 0x4a // 48 for rainbow wave
+        transferBuffer[4] = 0x03 // 02 for Rb W / Bing
+        transferBuffer[6] = 0x4a // 48 for Rb W / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -612,7 +612,7 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x06
         transferBuffer[4] = 0x02
-        transferBuffer[6] = 0x57 // 55 for rainbow wave
+        transferBuffer[6] = 0x57 // 55 for Rb W / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -623,7 +623,7 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x07
         transferBuffer[4] = 0x01
-        transferBuffer[6] = 0x5f // 5d for rainbow wave
+        transferBuffer[6] = 0x5f // 5d for Rb W / Bing
         transferBuffer[8] = 0x55
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
@@ -638,7 +638,7 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x08
         transferBuffer[4] = 0x01
-        transferBuffer[6] = 0x65 // 63 for rainbow wave
+        transferBuffer[6] = 0x65 // 63 for Rb W / Bing
         transferBuffer[8] = 0x55
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
@@ -653,7 +653,7 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x09
         transferBuffer[4] = 0x02
-        transferBuffer[6] = 0x6e // 6c for rainbow wave
+        transferBuffer[6] = 0x6e // 6c for Rb W / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -664,7 +664,7 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x0a
         transferBuffer[4] = 0x01
-        transferBuffer[6] = 0x77 // 75 for rainbow wave
+        transferBuffer[6] = 0x77 // 75 for Rb W / Bing
         transferBuffer[8] = 0x55
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
@@ -679,7 +679,7 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x0b
         transferBuffer[4] = 0x01
-        transferBuffer[6] = 0x7e // 7c for Rb W
+        transferBuffer[6] = 0x7e // 7c for Rb W / Bing
         transferBuffer[8] = 0x55
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
@@ -694,7 +694,7 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x0c
         transferBuffer[4] = 0x02
-        transferBuffer[6] = 0x88 // 86 for Rb W
+        transferBuffer[6] = 0x88 // 86 for Rb W / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -715,14 +715,13 @@ export class CMCp {
 
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
-        // Out 15 TODO This one sometimes changes with colors
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[5] = 0x01
         transferBuffer[7] = 0xc1
-        transferBuffer[12] = red // red??
-        transferBuffer[13] = green // green??
-        transferBuffer[14] = blue // blue??
+        transferBuffer[12] = red 
+        transferBuffer[13] = green
+        transferBuffer[14] = blue
         transferBuffer[15] = brightness // brightness??
         transferBuffer[25] = 0x32
         transferBuffer[27] = 0xc1
@@ -872,23 +871,23 @@ export class CMCp {
         transferBuffer[16] = 0x25
         transferBuffer[21] = 0x01
         transferBuffer[23] = 0xc1
-        transferBuffer[31] = 0xff // 0x00 Rb W
-        transferBuffer[37] = 0x40 // 0x01 Rb W
-        transferBuffer[39] = 0x80 // c1 Rb W
-        transferBuffer[40] = 0x08 // 00 Rb w
-        transferBuffer[41] = 0x10 // 00 Rb w
-        transferBuffer[44] = 0xff // 00 Rb w
-        transferBuffer[45] = 0xff // 00 Rb w
-        transferBuffer[46] = 0xff // 00 Rb w
-        transferBuffer[47] = 0xff // 00 Rb w
-        transferBuffer[50] = 0x01 // 00 Rb w
-        transferBuffer[52] = 0x01 // 14 Rb w
-        transferBuffer[53] = 0x10 // 00 Rb w
-        transferBuffer[54] = 0x08 // 14 Rb w
-        transferBuffer[55] = 0x01 // 00 Rb w
-        transferBuffer[56] = 0x10 // 40 Rb w
-        transferBuffer[60] = 0x14 // 44 Rb w
-        transferBuffer[62] = 0x14 // 01 Rb w
+        transferBuffer[31] = 0xff // 0x00 Rb W / Bing
+        transferBuffer[37] = 0x40 // 0x01 Rb W / Bing
+        transferBuffer[39] = 0x80 // c1 Rb W / Bing
+        transferBuffer[40] = 0x08 // 00 Rb w / Bing
+        transferBuffer[41] = 0x10 // 00 Rb w / Bing
+        transferBuffer[44] = 0xff // 00 Rb w / Bing
+        transferBuffer[45] = 0xff // 00 Rb w / Bing
+        transferBuffer[46] = 0xff // 00 Rb w / Bing
+        transferBuffer[47] = 0xff // 00 Rb w / Bing
+        transferBuffer[50] = 0x01 // 00 Rb w / Bing
+        transferBuffer[52] = 0x01 // 14 Rb w / Bing
+        transferBuffer[53] = 0x10 // 00 Rb w / Bing
+        transferBuffer[54] = 0x08 // 14 Rb w / Bing
+        transferBuffer[55] = 0x01 // 00 Rb w / Bing
+        transferBuffer[56] = 0x10 // 40 Rb w / Bing
+        transferBuffer[60] = 0x14 // 44 Rb w / Bing
+        transferBuffer[62] = 0x14 // 01 Rb w / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -898,43 +897,44 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x05
-        transferBuffer[4] = 0x40 // 00 Rb W
-        // [7] = 0xc1 Rb W
-        transferBuffer[8] = 0x44 // 00 Rb W
-        transferBuffer[10] = 0x01 // 00 Rb W
-        transferBuffer[13] = 0x01 // 00 Rb W
-        transferBuffer[15] = 0xc1 // ff Rb W
-        // [20] = 0x81 Rb W
-        // [21] = 0x40 Rb W
-        transferBuffer[23] = 0xff // 80 Rb W
-        // [24] 0x05 Rb W
-        // [25] 0x10 Rb W
-        transferBuffer[28] = 0x81 // ff Rb W
-        transferBuffer[29] = 0x40 // ff Rb W
-        transferBuffer[31] = 0x80 // ff Rb W
-        transferBuffer[32] = 0x05 // 00 Rb W
-        transferBuffer[33] = 0x10 // 00 Rb W
-        // [34] = 0x03 Rb W
-        transferBuffer[36] = 0xff // 30 Rb W
+        transferBuffer[4] = 0x40 // 00 Rb W / Bing
+        // [5] = 0x01 Rb W 0xc1 Bing
+        // [7] = 0xc1 Rb W / Bing
+        transferBuffer[8] = 0x44 // 00 Rb W / Bing
+        transferBuffer[10] = 0x01 // 00 Rb W / Bing
+        transferBuffer[13] = 0x01 // 00 Rb W / Bing
+        transferBuffer[15] = 0xc1 // ff Rb W / Bing
+        // [20] = 0x81 Rb W / Bing
+        // [21] = 0x40 Rb W / Bing
+        transferBuffer[23] = 0xff // 80 Rb W / Bing
+        // [24] 0x05 Rb W / Bing
+        // [25] 0x10 Rb W / Bing
+        transferBuffer[28] = 0x81 // ff Rb W / Bing
+        transferBuffer[29] = 0x40 // ff Rb W / Bing
+        transferBuffer[31] = 0x80 // ff Rb W / Bing
+        transferBuffer[32] = 0x05 // 00 Rb W / Bing
+        transferBuffer[33] = 0x10 // 00 Rb W / Bing
+        // [34] = 0x03 Rb W / Bing
+        transferBuffer[36] = 0xff // 30 Rb W / Bing
         transferBuffer[37] = 0xff
-        transferBuffer[38] = 0xff // 10 Rb W
-        transferBuffer[39] = 0xff // 10 Rb W
-        // [40] = 0x01  Rb W
-        // [41] = 0x40  Rb W
-        transferBuffer[42] = 0x03 // 00 Rb W
-        transferBuffer[44] = 0x30 // 14 Rb W
-        transferBuffer[45] = 0xff // 00 Rb W
-        transferBuffer[46] = 0x10 // 14 Rb W
-        transferBuffer[47] = 0x10 // 00 Rb W
-        transferBuffer[48] = 0x01 // 4b Rb W
-        transferBuffer[49] = 0x40 // 00 Rb W
-        transferBuffer[52] = 0x14 // 4f Rb W
-        transferBuffer[54] = 0x14 // 01 Rb W
-        transferBuffer[56] = 0x4d // 00 Rb W
-        // [57] = 0x31 Rb W
-        // [59] = 0xc1 Rb W
-        transferBuffer[60] = 0x51 // 08 Rb W
-        transferBuffer[62] = 0x01 // 00 Rb W
+        transferBuffer[38] = 0xff // 10 Rb W / Bing
+        transferBuffer[39] = 0xff // 10 Rb W / Bing
+        // [40] = 0x01  Rb W / Bing
+        // [41] = 0x40  Rb W / Bing
+        transferBuffer[42] = 0x03 // 00 Rb W / Bing
+        transferBuffer[44] = 0x30 // 14 Rb W / Bing
+        transferBuffer[45] = 0xff // 00 Rb W / Bing
+        transferBuffer[46] = 0x10 // 14 Rb W / Bing
+        transferBuffer[47] = 0x10 // 00 Rb W / Bing
+        transferBuffer[48] = 0x01 // 4b Rb W / Bing
+        transferBuffer[49] = 0x40 // 00 Rb W / Bing
+        transferBuffer[52] = 0x14 // 4f Rb W / Bing
+        transferBuffer[54] = 0x14 // 01 Rb W / Bing
+        transferBuffer[56] = 0x4d // 00 Rb W / Bing
+        // [57] = 0x31 Rb W / Bing
+        // [59] = 0xc1 Rb W / Bing
+        transferBuffer[60] = 0x51 // 08 Rb W / Bing
+        transferBuffer[62] = 0x01 // 00 Rb W / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -944,40 +944,40 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x06
-        // [4] = 0x40 Rb W
-        transferBuffer[5] = 0x31 // 00 Rb W
-        //[6] = 0xff Rb W
-        transferBuffer[7] = 0xc1 //0xff Rb W
-        transferBuffer[8] = 0x08 // 00 Rb W
-        // [10] = 0x03 Rb W
-        transferBuffer[12] = 0x40 // 00 Rb W
-        transferBuffer[14] = 0xff // 00 Rb W
-        transferBuffer[15] = 0xff // 00 Rb W
-        // [16] = 0x58 Rb W
-        transferBuffer[18] = 0x03 // 00 Rb W
-        // [21] = 0x30 Rb W
-        // [23] = 0xc1 Rb W
-        transferBuffer[24] = 0x5a // 0c Rb W
-        // [28] = 0xff Rb W
-        transferBuffer[29] = 0x30 // ff Rb W
-        // [30] = 0xff Rb W
-        transferBuffer[31] = 0xc1 // ff Rb W
-        transferBuffer[32] = 0x0c // 01 Rb W
-        // [34] = 0x04 Rb W
-        transferBuffer[36] = 0xff // 00 Rb W
-        transferBuffer[37] = 0xff // 00 Rb W
-        transferBuffer[38] = 0xff // 00 Rb W
-        transferBuffer[39] = 0xff // 00 Rb W
-        transferBuffer[40] = 0x01 // 5e Rb W
-        transferBuffer[42] = 0x04 // 00 Rb W
-        // [45] = 0x01 Rb W
-        // [47] = 0xc1 Rb W
-        transferBuffer[48] = 0x60 // 00 Rb W
-        transferBuffer[53] = 0x01 // 00 Rb W
-        transferBuffer[55] = 0xc1 // ff Rb W
-        // [60] = 0x28 Rb W
-        // [61] = 0x80 Rb W
-        transferBuffer[63] = 0xff // 80 Rb W
+        // [4] = 0x40 Rb W / Bing
+        transferBuffer[5] = 0x31 // 00 Rb W / Bing
+        //[6] = 0xff Rb W / Bing
+        transferBuffer[7] = 0xc1 //0xff Rb W / Bing
+        transferBuffer[8] = 0x08 // 00 Rb W / Bing
+        // [10] = 0x03 Rb W / Bing
+        transferBuffer[12] = 0x40 // 00 Rb W / Bing
+        transferBuffer[14] = 0xff // 00 Rb W / Bing
+        transferBuffer[15] = 0xff // 00 Rb W / Bing
+        // [16] = 0x58 Rb W / Bing
+        transferBuffer[18] = 0x03 // 00 Rb W / Bing
+        // [21] = 0x30 Rb W / Bing
+        // [23] = 0xc1 Rb W / Bing
+        transferBuffer[24] = 0x5a // 0c Rb W / Bing
+        // [28] = 0xff Rb W / Bing
+        transferBuffer[29] = 0x30 // ff Rb W / Bing
+        // [30] = 0xff Rb W / Bing
+        transferBuffer[31] = 0xc1 // ff Rb W / Bing
+        transferBuffer[32] = 0x0c // 01 Rb W / Bing
+        // [34] = 0x04 Rb W / Bing
+        transferBuffer[36] = 0xff // 00 Rb W / Bing
+        transferBuffer[37] = 0xff // 00 Rb W / Bing
+        transferBuffer[38] = 0xff // 00 Rb W / Bing
+        transferBuffer[39] = 0xff // 00 Rb W / Bing
+        transferBuffer[40] = 0x01 // 5e Rb W / Bing
+        transferBuffer[42] = 0x04 // 00 Rb W / Bing
+        // [45] = 0x01 Rb W / Bing
+        // [47] = 0xc1 Rb W / Bing
+        transferBuffer[48] = 0x60 // 00 Rb W / Bing
+        transferBuffer[53] = 0x01 // 00 Rb W / Bing
+        transferBuffer[55] = 0xc1 // ff Rb W / Bing
+        // [60] = 0x28 Rb W / Bing
+        // [61] = 0x80 Rb W / Bing
+        transferBuffer[63] = 0xff // 80 Rb W / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -987,43 +987,49 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x07
-        // [4] = 0x07 Rb W
-        transferBuffer[8] = 0x28 // 68 Rb W
-        transferBuffer[9] = 0x80 // 00 Rb W
+        // [4] = 0x07 Rb W / Bing
+        // transferBuffer[5] = 0x10 Bing
+        transferBuffer[8] = 0x28 // 68 Rb W / 00 Bing
+        transferBuffer[9] = 0x80 // 00 Rb W / 00 Bing
         // [10] = 0x01 Rb W
-        transferBuffer[11] = 0x80 // 00 Rb W
-        transferBuffer[12] = 0x07 // 00 Rb W
-        transferBuffer[13] = 0x10 // 34 Rb W
+        transferBuffer[11] = 0x80 // 00 Rb W / ff Bing
+        transferBuffer[12] = 0x07 // 00 Rb W/ Bing
+        transferBuffer[13] = 0x10 // 34 Rb W / 00 Bing
+        // transferBuffer[14] = 0x01 Bing
         // [15] = 0xc1 Rb W
-        // [16] = 0x04 Rb W
-        transferBuffer[19] = 0xff // 00 Rb W
+        // [16] = 0x04 Rb W / 0x14 Bing
+        // transferBuffer[18] = 0x14 Bing
+        transferBuffer[19] = 0xff // 00 Rb W / Bing
+        // transferBuffer[20] = 0x64 Bing
         //[21] = 0x10 Rb W
-        transferBuffer[22] = 0x01 // 00 Rb W
-        transferBuffer[24] = 0x14 // 00 Rb W
-        transferBuffer[26] = 0x14 // 00 Rb W
+        transferBuffer[22] = 0x01 // 00 Rb W / Bing
+        transferBuffer[24] = 0x14 // 00 Rb W / 68 Bing
+        transferBuffer[26] = 0x14 // 00 Rb W / 01 Bing
         // [27] = 0xff Rb W
-        transferBuffer[28] = 0x66 // 00 Rb W
+        transferBuffer[28] = 0x66 // 00 Rb W / Bing
+        // transferBuffer[29] = 0x34 Bing
         // [30] = 0x01 Rb W
-        transferBuffer[32] = 0x6a // 14 Rb W
-        transferBuffer[34] = 0x01 // 14 Rb W
+        // transferBuffer[31] = 0xc1 Bing
+        transferBuffer[32] = 0x6a // 14 Rb W / 04 Bing
+        transferBuffer[34] = 0x01 // 14 Rb W / 00 Bing
         // [36] = 0x64 Rb W
-        transferBuffer[37] = 0x34 // 00 Rb W
-        // [38] = 0xff Rb W
-        transferBuffer[39] = 0xc1 // ff Rb W
-        transferBuffer[40] = 0x04 // 00 Rb W
-        // [42] = 0xfd Rb W
-        // [45] = 0x80 Rb W
-        transferBuffer[46] = 0xff // 00  Rb W
-        transferBuffer[47] = 0xff // 00 Rb W
-        // [48] = 0x30 Rb W
-        transferBuffer[50] = 0xfd //10 Rb W
-        // [52] = 0x6f Rb W
-        transferBuffer[53] = 0x80 // 00 Rb W
-        transferBuffer[56] = 0x30 // 00 Rb W
-        // [57] = 0x83 Rb W
-        transferBuffer[58] = 0x10 // 00 Rb W
-        // [59] = 0xc1 Rb W
-        transferBuffer[60] = 0x71 // 04 Rb W
+        transferBuffer[37] = 0x34 // 00 Rb W / Bing
+        // [38] = 0xff Rb W / Bing
+        transferBuffer[39] = 0xc1 // ff Rb W / Bing
+        transferBuffer[40] = 0x04 // 00 Rb W / Bing
+        // [42] = 0xfd Rb W / Bing
+        // [45] = 0x80 Rb W / Bing
+        transferBuffer[46] = 0xff // 00  Rb W / Bing
+        transferBuffer[47] = 0xff // 00 Rb W / Bing
+        // [48] = 0x30 Rb W / Bing
+        transferBuffer[50] = 0xfd //10 Rb W / Bing
+        // [52] = 0x6f Rb W / Bing
+        transferBuffer[53] = 0x80 // 00 Rb W / Bing
+        transferBuffer[56] = 0x30 // 00 Rb W / Bing
+        // [57] = 0x83 Rb W / Bing
+        transferBuffer[58] = 0x10 // 00 Rb W / Bing
+        // [59] = 0xc1 Rb W / Bing
+        transferBuffer[60] = 0x71 // 04 Rb W / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -1033,43 +1039,43 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x08
-        transferBuffer[5] = 0x83 // 00 Rb W
-        // [6] = 0xff Rb W
-        transferBuffer[7] = 0xc1 // ff Rb W
-        transferBuffer[8] = 0x04 // 00 Rb W
-        // [10] = 0xfd Rb W
-        // [13] = 0x80 Rb W
-        transferBuffer[14] = 0xff // 00 Rb W
-        transferBuffer[15] = 0xff // 00 Rb W
-        // [16] = 0x30 Rb W
-        transferBuffer[18] = 0xfd // 10 Rb W
-        // [20] = 0x76 Rb W
-        transferBuffer[21] = 0x80 // 00 Rb W
-        transferBuffer[24] = 0x30 // 00 Rb W
-        // [25] = 0x01 Rb W
-        transferBuffer[26] = 0x10 // 00 Rb W
-        // [27] = 0xc1 Rb W
-        transferBuffer[28] = 0x78 // 00 Rb W
-        transferBuffer[33] = 0x01 // 00 Rb W
-        transferBuffer[35] = 0xc1 // ff Rb W
-        // [40] = 0x01 Rb W
-        // [41] = 0x82 Rb W
-        transferBuffer[43] = 0xff // 80 Rb W
-        // [44] = 0x0c Rb W
-        // [45] = 0x10 Rb W
-        transferBuffer[48] = 0x01 // ff Rb W
-        transferBuffer[49] = 0x82 // ff Rb W
-        // [50] = 0xff Rb W
-        transferBuffer[51] = 0x80 // ff Rb W
-        transferBuffer[52] = 0x0c // 00 Rb W
-        transferBuffer[53] = 0x10 // 00 Rb W
-        // [54] = 0x06 Rb W
-        transferBuffer[56] = 0xff // 00 Rb W
-        transferBuffer[57] = 0xff // 90 Rb W
-        transferBuffer[58] = 0xff // 14 Rb W
-        transferBuffer[59] = 0xff // 20 Rb W
-        // [60] = 0x14 Rb W
-        transferBuffer[62] = 0x06 // 14 Rb W
+        transferBuffer[5] = 0x83 // 00 Rb W / Bing
+        // [6] = 0xff Rb W / Bing
+        transferBuffer[7] = 0xc1 // ff Rb W / Bing
+        transferBuffer[8] = 0x04 // 00 Rb W / Bing
+        // [10] = 0xfd Rb W / Bing
+        // [13] = 0x80 Rb W / Bing
+        transferBuffer[14] = 0xff // 00 Rb W / Bing
+        transferBuffer[15] = 0xff // 00 Rb W / Bing
+        // [16] = 0x30 Rb W / Bing
+        transferBuffer[18] = 0xfd // 10 Rb W / Bing
+        // [20] = 0x76 Rb W / Bing
+        transferBuffer[21] = 0x80 // 00 Rb W / Bing
+        transferBuffer[24] = 0x30 // 00 Rb W / Bing
+        // [25] = 0x01 Rb W / Bing
+        transferBuffer[26] = 0x10 // 00 Rb W / Bing
+        // [27] = 0xc1 Rb W / Bing
+        transferBuffer[28] = 0x78 // 00 Rb W / Bing
+        transferBuffer[33] = 0x01 // 00 Rb W / Bing
+        transferBuffer[35] = 0xc1 // ff Rb W / Bing
+        // [40] = 0x01 Rb W / Bing
+        // [41] = 0x82 Rb W / Bing
+        transferBuffer[43] = 0xff // 80 Rb W / Bing
+        // [44] = 0x0c Rb W / Bing
+        // [45] = 0x10 Rb W / Bing
+        transferBuffer[48] = 0x01 // ff Rb W / Bing
+        transferBuffer[49] = 0x82 // ff Rb W / Bing
+        // [50] = 0xff Rb W / Bing
+        transferBuffer[51] = 0x80 // ff Rb W / Bing
+        transferBuffer[52] = 0x0c // 00 Rb W / Bing
+        transferBuffer[53] = 0x10 // 00 Rb W / Bing
+        // [54] = 0x06 Rb W / Bing
+        transferBuffer[56] = 0xff // 00 Rb W / Bing
+        transferBuffer[57] = 0xff // 90 Rb W / Bing
+        transferBuffer[58] = 0xff // 14 Rb W / Bing
+        transferBuffer[59] = 0xff // 20 Rb W / Bing
+        // [60] = 0x14 Rb W / Bing
+        transferBuffer[62] = 0x06 // 14 Rb W / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -1079,19 +1085,19 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x09
-        // [4] = 0x7d Rb W
-        transferBuffer[5] = 0x90 // 00 Rb W
-        transferBuffer[6] = 0x14 // 00 Rb W
-        transferBuffer[7] = 0x20 // 00 Rb W
-        transferBuffer[8] = 0x14 //81 Rb W
-        transferBuffer[10] = 0x14 // 01 Rb W
-        transferBuffer[12] = 0x7f // 10 Rb W
-        // [15] = 0xc1 Rb W
-        transferBuffer[16] = 0x83 // 00 Rb W
-        transferBuffer[18] = 0x01 // 00 Rb W
-        transferBuffer[20] = 0x10 // 89 Rb W
-        transferBuffer[23] = 0xc1 // 00 Rb W
-        transferBuffer[28] = 0x8b // 00 Rb W
+        // [4] = 0x7d Rb W / Bing
+        transferBuffer[5] = 0x90 // 00 Rb W / Bing
+        transferBuffer[6] = 0x14 // 00 Rb W / Bing
+        transferBuffer[7] = 0x20 // 00 Rb W / Bing
+        transferBuffer[8] = 0x14 //81 Rb W / Bing
+        transferBuffer[10] = 0x14 // 01 Rb W / Bing
+        transferBuffer[12] = 0x7f // 10 Rb W / Bing
+        // [15] = 0xc1 Rb W / Bing
+        transferBuffer[16] = 0x83 // 00 Rb W / Bing
+        transferBuffer[18] = 0x01 // 00 Rb W / Bing
+        transferBuffer[20] = 0x10 // 89 Rb W / Bing
+        transferBuffer[23] = 0xc1 // 00 Rb W / Bing
+        transferBuffer[28] = 0x8b // 00 Rb W / Bing
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
