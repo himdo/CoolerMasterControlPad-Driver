@@ -1,4 +1,29 @@
 import * as usb from 'usb';
+/* From Config DeviceList.cfg in the master plus install location
+{
+    "HID_PATH": null,
+    "INTERFACE": 1,
+    "PID": "0x007B",
+    "UUID": "24",
+    "VID": "0x2516",
+    "deviceName": "ControlPadC",
+    "deviceType": "ControlPadC",
+    "deviceCategory": "ControlPad",
+    "fwVersion": "1.0",
+    "devPortNumber":null,
+    "devPortStart": 0,
+    "devPortEnd": 0,
+    "devPortCount":0,
+    "imageLink": "image/ControlPadC/ControlPad_C.png",
+    "imageThumbLink": "image/ControlPadC/ControlPad_C.png",
+    "imageLinkMulti": [
+        "image/ControlPadC/ControlPad_C.png"
+    ],
+    "imageLinkMultiIndex": 0,
+    "isSupportLed":1,
+    "isEcoSystemDevice":1
+},
+*/
 
 const VID = 0x2516
 // const vid = 9610
@@ -527,7 +552,12 @@ export class CMCp {
         this.currentMode = mode;
     }
 
-    async applyLEDModes(brightness=0xff, red=0xff, green=0xff, blue=0xff, ledSpeed=0x04) {
+    async applyLEDModes(mode, brightness=0xff, red=0xff, green=0xff, blue=0xff, ledSpeed=0x04) {
+        if (mode !== LED_CYCLE_ENUM.static && mode !== LED_CYCLE_ENUM['rainbow wave'] && mode !== LED_CYCLE_ENUM.breathing) {
+            console.log('Not Yet Implemented\nExiting for safety')
+            return -1
+        }
+        
         // OUT 1
         let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
@@ -602,6 +632,16 @@ export class CMCp {
         transferBuffer[2] = 0x05
         transferBuffer[4] = 0x03 // 02 for Rb W / Bing
         transferBuffer[6] = 0x4a // 48 for Rb W / Bing
+
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[4] = 0x03
+            transferBuffer[6] = 0x4a
+
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[4] = 0x02
+            transferBuffer[6] = 0x48
+            
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -612,7 +652,11 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x06
         transferBuffer[4] = 0x02
-        transferBuffer[6] = 0x57 // 55 for Rb W / Bing
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[6] = 0x57
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[6] = 0x55
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -623,11 +667,15 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x07
         transferBuffer[4] = 0x01
-        transferBuffer[6] = 0x5f // 5d for Rb W / Bing
         transferBuffer[8] = 0x55
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
         transferBuffer[11] = 0x55
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[6] = 0x5f 
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[6] = 0x5d
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -638,11 +686,15 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x08
         transferBuffer[4] = 0x01
-        transferBuffer[6] = 0x65 // 63 for Rb W / Bing
         transferBuffer[8] = 0x55
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
         transferBuffer[11] = 0x55
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[6] = 0x65
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[6] = 0x63
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -653,7 +705,11 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x09
         transferBuffer[4] = 0x02
-        transferBuffer[6] = 0x6e // 6c for Rb W / Bing
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[6] = 0x6e
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[6] = 0x6c
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -664,11 +720,16 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x0a
         transferBuffer[4] = 0x01
-        transferBuffer[6] = 0x77 // 75 for Rb W / Bing
         transferBuffer[8] = 0x55
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
         transferBuffer[11] = 0x55
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[6] = 0x77
+
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[6] = 0x75
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -679,11 +740,16 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x0b
         transferBuffer[4] = 0x01
-        transferBuffer[6] = 0x7e // 7c for Rb W / Bing
         transferBuffer[8] = 0x55
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
         transferBuffer[11] = 0x55
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[6] = 0x7e
+
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[6] = 0x7c
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -694,7 +760,11 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x0c
         transferBuffer[4] = 0x02
-        transferBuffer[6] = 0x88 // 86 for Rb W / Bing
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[6] = 0x88
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[6] = 0x86
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -722,7 +792,7 @@ export class CMCp {
         transferBuffer[12] = red 
         transferBuffer[13] = green
         transferBuffer[14] = blue
-        transferBuffer[15] = brightness // brightness??
+        transferBuffer[15] = brightness
         transferBuffer[25] = 0x32
         transferBuffer[27] = 0xc1
         transferBuffer[28] = 0x07
@@ -871,23 +941,34 @@ export class CMCp {
         transferBuffer[16] = 0x25
         transferBuffer[21] = 0x01
         transferBuffer[23] = 0xc1
-        transferBuffer[31] = 0xff // 0x00 Rb W / Bing
-        transferBuffer[37] = 0x40 // 0x01 Rb W / Bing
-        transferBuffer[39] = 0x80 // c1 Rb W / Bing
-        transferBuffer[40] = 0x08 // 00 Rb w / Bing
-        transferBuffer[41] = 0x10 // 00 Rb w / Bing
-        transferBuffer[44] = 0xff // 00 Rb w / Bing
-        transferBuffer[45] = 0xff // 00 Rb w / Bing
-        transferBuffer[46] = 0xff // 00 Rb w / Bing
-        transferBuffer[47] = 0xff // 00 Rb w / Bing
-        transferBuffer[50] = 0x01 // 00 Rb w / Bing
-        transferBuffer[52] = 0x01 // 14 Rb w / Bing
-        transferBuffer[53] = 0x10 // 00 Rb w / Bing
-        transferBuffer[54] = 0x08 // 14 Rb w / Bing
-        transferBuffer[55] = 0x01 // 00 Rb w / Bing
-        transferBuffer[56] = 0x10 // 40 Rb w / Bing
-        transferBuffer[60] = 0x14 // 44 Rb w / Bing
-        transferBuffer[62] = 0x14 // 01 Rb w / Bing
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[31] = 0xff
+            transferBuffer[37] = 0x40
+            transferBuffer[39] = 0x80
+            transferBuffer[40] = 0x08
+            transferBuffer[41] = 0x10
+            transferBuffer[44] = 0xff
+            transferBuffer[45] = 0xff
+            transferBuffer[46] = 0xff
+            transferBuffer[47] = 0xff
+            transferBuffer[50] = 0x01
+            transferBuffer[52] = 0x01
+            transferBuffer[53] = 0x10
+            transferBuffer[54] = 0x08
+            transferBuffer[55] = 0x01
+            transferBuffer[56] = 0x10
+            transferBuffer[60] = 0x14
+            transferBuffer[62] = 0x14
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[37] = 0x01
+            transferBuffer[39] = 0xc1
+            transferBuffer[52] = 0x14
+            transferBuffer[54] = 0x14
+            transferBuffer[56] = 0x40
+            transferBuffer[60] = 0x44
+            transferBuffer[62] = 0x01
+        }
+        
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -897,44 +978,88 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x05
-        transferBuffer[4] = 0x40 // 00 Rb W / Bing
-        // [5] = 0x01 Rb W 0xc1 Bing
-        // [7] = 0xc1 Rb W / Bing
-        transferBuffer[8] = 0x44 // 00 Rb W / Bing
-        transferBuffer[10] = 0x01 // 00 Rb W / Bing
-        transferBuffer[13] = 0x01 // 00 Rb W / Bing
-        transferBuffer[15] = 0xc1 // ff Rb W / Bing
-        // [20] = 0x81 Rb W / Bing
-        // [21] = 0x40 Rb W / Bing
-        transferBuffer[23] = 0xff // 80 Rb W / Bing
-        // [24] 0x05 Rb W / Bing
-        // [25] 0x10 Rb W / Bing
-        transferBuffer[28] = 0x81 // ff Rb W / Bing
-        transferBuffer[29] = 0x40 // ff Rb W / Bing
-        transferBuffer[31] = 0x80 // ff Rb W / Bing
-        transferBuffer[32] = 0x05 // 00 Rb W / Bing
-        transferBuffer[33] = 0x10 // 00 Rb W / Bing
-        // [34] = 0x03 Rb W / Bing
-        transferBuffer[36] = 0xff // 30 Rb W / Bing
         transferBuffer[37] = 0xff
-        transferBuffer[38] = 0xff // 10 Rb W / Bing
-        transferBuffer[39] = 0xff // 10 Rb W / Bing
-        // [40] = 0x01  Rb W / Bing
-        // [41] = 0x40  Rb W / Bing
-        transferBuffer[42] = 0x03 // 00 Rb W / Bing
-        transferBuffer[44] = 0x30 // 14 Rb W / Bing
-        transferBuffer[45] = 0xff // 00 Rb W / Bing
-        transferBuffer[46] = 0x10 // 14 Rb W / Bing
-        transferBuffer[47] = 0x10 // 00 Rb W / Bing
-        transferBuffer[48] = 0x01 // 4b Rb W / Bing
-        transferBuffer[49] = 0x40 // 00 Rb W / Bing
-        transferBuffer[52] = 0x14 // 4f Rb W / Bing
-        transferBuffer[54] = 0x14 // 01 Rb W / Bing
-        transferBuffer[56] = 0x4d // 00 Rb W / Bing
-        // [57] = 0x31 Rb W / Bing
-        // [59] = 0xc1 Rb W / Bing
-        transferBuffer[60] = 0x51 // 08 Rb W / Bing
-        transferBuffer[62] = 0x01 // 00 Rb W / Bing
+        
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[4] = 0x40
+            transferBuffer[8] = 0x44
+            transferBuffer[10] = 0x01
+            transferBuffer[13] = 0x01
+            transferBuffer[15] = 0xc1
+            transferBuffer[23] = 0xff
+            transferBuffer[28] = 0x81
+            transferBuffer[29] = 0x40
+            transferBuffer[31] = 0x80
+            transferBuffer[32] = 0x05
+            transferBuffer[33] = 0x10
+            transferBuffer[36] = 0xff
+            transferBuffer[38] = 0xff
+            transferBuffer[39] = 0xff
+            transferBuffer[42] = 0x03
+            transferBuffer[44] = 0x30
+            transferBuffer[45] = 0xff
+            transferBuffer[46] = 0x10
+            transferBuffer[47] = 0x10
+            transferBuffer[48] = 0x01
+            transferBuffer[49] = 0x40
+            transferBuffer[52] = 0x14
+            transferBuffer[54] = 0x14
+            transferBuffer[56] = 0x4d
+            transferBuffer[60] = 0x51
+            transferBuffer[62] = 0x01
+        } else if (mode === LED_CYCLE_ENUM.breathing) {
+            transferBuffer[5] = 0xc1
+            transferBuffer[7] = 0xc1
+            transferBuffer[15] = 0xff
+            transferBuffer[20] = 0x81
+            transferBuffer[21] = 0x40
+            transferBuffer[23] = 0x80
+            transferBuffer[24] = 0x05
+            transferBuffer[25] = 0x10
+            transferBuffer[28] = 0xff
+            transferBuffer[29] = 0xff
+            transferBuffer[31] = 0xff
+            transferBuffer[34] = 0x03
+            transferBuffer[36] = 0x30
+            transferBuffer[38] = 0x10
+            transferBuffer[39] = 0x10
+            transferBuffer[40] = 0x01
+            transferBuffer[41] = 0x40
+            transferBuffer[44] = 0x14
+            transferBuffer[46] = 0x14
+            transferBuffer[48] = 0x4b
+            transferBuffer[52] = 0x4f
+            transferBuffer[54] = 0x01
+            transferBuffer[57] = 0x31
+            transferBuffer[59] = 0xc1
+            transferBuffer[60] = 0x08
+        } else if (mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[5] = 0x01
+            transferBuffer[7] = 0xc1
+            transferBuffer[15] = 0xff
+            transferBuffer[20] = 0x81
+            transferBuffer[21] = 0x40
+            transferBuffer[23] = 0x80
+            transferBuffer[24] = 0x05
+            transferBuffer[25] = 0x10
+            transferBuffer[28] = 0xff
+            transferBuffer[29] = 0xff
+            transferBuffer[31] = 0xff
+            transferBuffer[34] = 0x03
+            transferBuffer[36] = 0x30
+            transferBuffer[38] = 0x10
+            transferBuffer[39] = 0x10
+            transferBuffer[40] = 0x01
+            transferBuffer[41] = 0x40
+            transferBuffer[44] = 0x14
+            transferBuffer[46] = 0x14
+            transferBuffer[48] = 0x4b
+            transferBuffer[52] = 0x4f
+            transferBuffer[54] = 0x01
+            transferBuffer[57] = 0x31
+            transferBuffer[59] = 0xc1
+            transferBuffer[60] = 0x08
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -944,40 +1069,52 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x06
-        // [4] = 0x40 Rb W / Bing
-        transferBuffer[5] = 0x31 // 00 Rb W / Bing
-        //[6] = 0xff Rb W / Bing
-        transferBuffer[7] = 0xc1 //0xff Rb W / Bing
-        transferBuffer[8] = 0x08 // 00 Rb W / Bing
-        // [10] = 0x03 Rb W / Bing
-        transferBuffer[12] = 0x40 // 00 Rb W / Bing
-        transferBuffer[14] = 0xff // 00 Rb W / Bing
-        transferBuffer[15] = 0xff // 00 Rb W / Bing
-        // [16] = 0x58 Rb W / Bing
-        transferBuffer[18] = 0x03 // 00 Rb W / Bing
-        // [21] = 0x30 Rb W / Bing
-        // [23] = 0xc1 Rb W / Bing
-        transferBuffer[24] = 0x5a // 0c Rb W / Bing
-        // [28] = 0xff Rb W / Bing
-        transferBuffer[29] = 0x30 // ff Rb W / Bing
-        // [30] = 0xff Rb W / Bing
-        transferBuffer[31] = 0xc1 // ff Rb W / Bing
-        transferBuffer[32] = 0x0c // 01 Rb W / Bing
-        // [34] = 0x04 Rb W / Bing
-        transferBuffer[36] = 0xff // 00 Rb W / Bing
-        transferBuffer[37] = 0xff // 00 Rb W / Bing
-        transferBuffer[38] = 0xff // 00 Rb W / Bing
-        transferBuffer[39] = 0xff // 00 Rb W / Bing
-        transferBuffer[40] = 0x01 // 5e Rb W / Bing
-        transferBuffer[42] = 0x04 // 00 Rb W / Bing
-        // [45] = 0x01 Rb W / Bing
-        // [47] = 0xc1 Rb W / Bing
-        transferBuffer[48] = 0x60 // 00 Rb W / Bing
-        transferBuffer[53] = 0x01 // 00 Rb W / Bing
-        transferBuffer[55] = 0xc1 // ff Rb W / Bing
-        // [60] = 0x28 Rb W / Bing
-        // [61] = 0x80 Rb W / Bing
-        transferBuffer[63] = 0xff // 80 Rb W / Bing
+
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[5] = 0x31
+            transferBuffer[7] = 0xc1
+            transferBuffer[8] = 0x08
+            transferBuffer[12] = 0x40
+            transferBuffer[14] = 0xff
+            transferBuffer[15] = 0xff
+            transferBuffer[18] = 0x03
+            transferBuffer[24] = 0x5a
+            transferBuffer[29] = 0x30
+            transferBuffer[31] = 0xc1
+            transferBuffer[32] = 0x0c
+            transferBuffer[36] = 0xff
+            transferBuffer[37] = 0xff
+            transferBuffer[38] = 0xff
+            transferBuffer[39] = 0xff
+            transferBuffer[40] = 0x01
+            transferBuffer[42] = 0x04
+            transferBuffer[48] = 0x60
+            transferBuffer[53] = 0x01
+            transferBuffer[55] = 0xc1
+            transferBuffer[63] = 0xff
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[4] = 0x40
+            transferBuffer[6] = 0xff
+            transferBuffer[7] = 0xff
+            transferBuffer[10] = 0x03
+            transferBuffer[16] = 0x58
+            transferBuffer[21] = 0x30
+            transferBuffer[23] = 0xc1
+            transferBuffer[24] = 0x0c
+            transferBuffer[28] = 0xff
+            transferBuffer[29] = 0xff
+            transferBuffer[30] = 0xff
+            transferBuffer[31] = 0xff
+            transferBuffer[32] = 0x01
+            transferBuffer[34] = 0x04
+            transferBuffer[40] = 0x5e
+            transferBuffer[45] = 0x01
+            transferBuffer[47] = 0xc1
+            transferBuffer[55] = 0xff
+            transferBuffer[60] = 0x28
+            transferBuffer[61] = 0x80
+            transferBuffer[63] = 0x80
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -987,49 +1124,76 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x07
-        // [4] = 0x07 Rb W / Bing
-        // transferBuffer[5] = 0x10 Bing
-        transferBuffer[8] = 0x28 // 68 Rb W / 00 Bing
-        transferBuffer[9] = 0x80 // 00 Rb W / 00 Bing
-        // [10] = 0x01 Rb W
-        transferBuffer[11] = 0x80 // 00 Rb W / ff Bing
-        transferBuffer[12] = 0x07 // 00 Rb W/ Bing
-        transferBuffer[13] = 0x10 // 34 Rb W / 00 Bing
-        // transferBuffer[14] = 0x01 Bing
-        // [15] = 0xc1 Rb W
-        // [16] = 0x04 Rb W / 0x14 Bing
-        // transferBuffer[18] = 0x14 Bing
-        transferBuffer[19] = 0xff // 00 Rb W / Bing
-        // transferBuffer[20] = 0x64 Bing
-        //[21] = 0x10 Rb W
-        transferBuffer[22] = 0x01 // 00 Rb W / Bing
-        transferBuffer[24] = 0x14 // 00 Rb W / 68 Bing
-        transferBuffer[26] = 0x14 // 00 Rb W / 01 Bing
-        // [27] = 0xff Rb W
-        transferBuffer[28] = 0x66 // 00 Rb W / Bing
-        // transferBuffer[29] = 0x34 Bing
-        // [30] = 0x01 Rb W
-        // transferBuffer[31] = 0xc1 Bing
-        transferBuffer[32] = 0x6a // 14 Rb W / 04 Bing
-        transferBuffer[34] = 0x01 // 14 Rb W / 00 Bing
-        // [36] = 0x64 Rb W
-        transferBuffer[37] = 0x34 // 00 Rb W / Bing
-        // [38] = 0xff Rb W / Bing
-        transferBuffer[39] = 0xc1 // ff Rb W / Bing
-        transferBuffer[40] = 0x04 // 00 Rb W / Bing
-        // [42] = 0xfd Rb W / Bing
-        // [45] = 0x80 Rb W / Bing
-        transferBuffer[46] = 0xff // 00  Rb W / Bing
-        transferBuffer[47] = 0xff // 00 Rb W / Bing
-        // [48] = 0x30 Rb W / Bing
-        transferBuffer[50] = 0xfd //10 Rb W / Bing
-        // [52] = 0x6f Rb W / Bing
-        transferBuffer[53] = 0x80 // 00 Rb W / Bing
-        transferBuffer[56] = 0x30 // 00 Rb W / Bing
-        // [57] = 0x83 Rb W / Bing
-        transferBuffer[58] = 0x10 // 00 Rb W / Bing
-        // [59] = 0xc1 Rb W / Bing
-        transferBuffer[60] = 0x71 // 04 Rb W / Bing
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[8]  = 0x28
+            transferBuffer[9]  = 0x80
+            transferBuffer[11] = 0x80
+            transferBuffer[12] = 0x07
+            transferBuffer[13] = 0x10
+            transferBuffer[19] = 0xff
+            transferBuffer[22] = 0x01
+            transferBuffer[24] = 0x14
+            transferBuffer[26] = 0x14
+            transferBuffer[28] = 0x66
+            transferBuffer[32] = 0x6a
+            transferBuffer[34] = 0x01
+            transferBuffer[37] = 0x34
+            transferBuffer[39] = 0xc1
+            transferBuffer[40] = 0x04
+            transferBuffer[46] = 0xff
+            transferBuffer[47] = 0xff
+            transferBuffer[50] = 0xfd
+            transferBuffer[53] = 0x80
+            transferBuffer[56] = 0x30
+            transferBuffer[58] = 0x10
+            transferBuffer[60] = 0x71
+        } else if (mode === LED_CYCLE_ENUM.breathing) {
+            transferBuffer[4]  = 0x07
+            transferBuffer[5]  = 0x10
+            transferBuffer[11] = 0xff
+            transferBuffer[14] = 0x01
+            transferBuffer[16] = 0x14
+            transferBuffer[18] = 0x14
+            transferBuffer[20] = 0x64
+            transferBuffer[24] = 0x68
+            transferBuffer[26] = 0x01
+            transferBuffer[29] = 0x34
+            transferBuffer[31] = 0xc1
+            transferBuffer[32] = 0x04
+            transferBuffer[38] = 0xff
+            transferBuffer[39] = 0xff
+            transferBuffer[42] = 0xfd
+            transferBuffer[45] = 0x80
+            transferBuffer[48] = 0x30
+            transferBuffer[50] = 0x10
+            transferBuffer[52] = 0x6f
+            transferBuffer[57] = 0x83
+            transferBuffer[59] = 0xc1
+            transferBuffer[60] = 0x04
+        } else if (mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[4]  = 0x07
+            transferBuffer[8]  = 0x68
+            transferBuffer[10] = 0x01
+            transferBuffer[13] = 0x34
+            transferBuffer[15] = 0xc1
+            transferBuffer[16] = 0x04
+            transferBuffer[21] = 0x10
+            transferBuffer[27] = 0xff
+            transferBuffer[30] = 0x01
+            transferBuffer[32] = 0x14
+            transferBuffer[34] = 0x14
+            transferBuffer[36] = 0x64
+            transferBuffer[38] = 0xff
+            transferBuffer[39] = 0xff
+            transferBuffer[42] = 0xfd
+            transferBuffer[45] = 0x80
+            transferBuffer[48] = 0x30
+            transferBuffer[50] = 0x10
+            transferBuffer[52] = 0x6f
+            transferBuffer[57] = 0x83
+            transferBuffer[59] = 0xc1
+            transferBuffer[60] = 0x04
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -1039,43 +1203,58 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x08
-        transferBuffer[5] = 0x83 // 00 Rb W / Bing
-        // [6] = 0xff Rb W / Bing
-        transferBuffer[7] = 0xc1 // ff Rb W / Bing
-        transferBuffer[8] = 0x04 // 00 Rb W / Bing
-        // [10] = 0xfd Rb W / Bing
-        // [13] = 0x80 Rb W / Bing
-        transferBuffer[14] = 0xff // 00 Rb W / Bing
-        transferBuffer[15] = 0xff // 00 Rb W / Bing
-        // [16] = 0x30 Rb W / Bing
-        transferBuffer[18] = 0xfd // 10 Rb W / Bing
-        // [20] = 0x76 Rb W / Bing
-        transferBuffer[21] = 0x80 // 00 Rb W / Bing
-        transferBuffer[24] = 0x30 // 00 Rb W / Bing
-        // [25] = 0x01 Rb W / Bing
-        transferBuffer[26] = 0x10 // 00 Rb W / Bing
-        // [27] = 0xc1 Rb W / Bing
-        transferBuffer[28] = 0x78 // 00 Rb W / Bing
-        transferBuffer[33] = 0x01 // 00 Rb W / Bing
-        transferBuffer[35] = 0xc1 // ff Rb W / Bing
-        // [40] = 0x01 Rb W / Bing
-        // [41] = 0x82 Rb W / Bing
-        transferBuffer[43] = 0xff // 80 Rb W / Bing
-        // [44] = 0x0c Rb W / Bing
-        // [45] = 0x10 Rb W / Bing
-        transferBuffer[48] = 0x01 // ff Rb W / Bing
-        transferBuffer[49] = 0x82 // ff Rb W / Bing
-        // [50] = 0xff Rb W / Bing
-        transferBuffer[51] = 0x80 // ff Rb W / Bing
-        transferBuffer[52] = 0x0c // 00 Rb W / Bing
-        transferBuffer[53] = 0x10 // 00 Rb W / Bing
-        // [54] = 0x06 Rb W / Bing
-        transferBuffer[56] = 0xff // 00 Rb W / Bing
-        transferBuffer[57] = 0xff // 90 Rb W / Bing
-        transferBuffer[58] = 0xff // 14 Rb W / Bing
-        transferBuffer[59] = 0xff // 20 Rb W / Bing
-        // [60] = 0x14 Rb W / Bing
-        transferBuffer[62] = 0x06 // 14 Rb W / Bing
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[5]  = 0x83
+            transferBuffer[7]  = 0xc1
+            transferBuffer[8]  = 0x04
+            transferBuffer[14] = 0xff
+            transferBuffer[15] = 0xff
+            transferBuffer[18] = 0xfd
+            transferBuffer[21] = 0x80
+            transferBuffer[24] = 0x30
+            transferBuffer[26] = 0x10
+            transferBuffer[28] = 0x78
+            transferBuffer[33] = 0x01
+            transferBuffer[35] = 0xc1
+            transferBuffer[43] = 0xff
+            transferBuffer[48] = 0x01
+            transferBuffer[49] = 0x82
+            transferBuffer[51] = 0x80
+            transferBuffer[52] = 0x0c
+            transferBuffer[53] = 0x10
+            transferBuffer[56] = 0xff
+            transferBuffer[57] = 0xff
+            transferBuffer[58] = 0xff
+            transferBuffer[59] = 0xff
+            transferBuffer[62] = 0x06
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[6]  = 0xff
+            transferBuffer[7]  = 0xff
+            transferBuffer[10] = 0xfd
+            transferBuffer[13] = 0x80
+            transferBuffer[16] = 0x30
+            transferBuffer[18] = 0x10
+            transferBuffer[20] = 0x76
+            transferBuffer[25] = 0x01
+            transferBuffer[27] = 0xc1
+            transferBuffer[35] = 0xff
+            transferBuffer[40] = 0x01
+            transferBuffer[41] = 0x82
+            transferBuffer[43] = 0x80
+            transferBuffer[44] = 0x0c
+            transferBuffer[45] = 0x10
+            transferBuffer[48] = 0xff
+            transferBuffer[49] = 0xff
+            transferBuffer[50] = 0xff
+            transferBuffer[51] = 0xff
+            transferBuffer[54] = 0x06
+            transferBuffer[57] = 0x90
+            transferBuffer[58] = 0x14
+            transferBuffer[59] = 0x20
+            transferBuffer[60] = 0x14
+            transferBuffer[62] = 0x14
+
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
@@ -1085,19 +1264,26 @@ export class CMCp {
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x09
-        // [4] = 0x7d Rb W / Bing
-        transferBuffer[5] = 0x90 // 00 Rb W / Bing
-        transferBuffer[6] = 0x14 // 00 Rb W / Bing
-        transferBuffer[7] = 0x20 // 00 Rb W / Bing
-        transferBuffer[8] = 0x14 //81 Rb W / Bing
-        transferBuffer[10] = 0x14 // 01 Rb W / Bing
-        transferBuffer[12] = 0x7f // 10 Rb W / Bing
-        // [15] = 0xc1 Rb W / Bing
-        transferBuffer[16] = 0x83 // 00 Rb W / Bing
-        transferBuffer[18] = 0x01 // 00 Rb W / Bing
-        transferBuffer[20] = 0x10 // 89 Rb W / Bing
-        transferBuffer[23] = 0xc1 // 00 Rb W / Bing
-        transferBuffer[28] = 0x8b // 00 Rb W / Bing
+        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[5]  = 0x90
+            transferBuffer[6]  = 0x14
+            transferBuffer[7]  = 0x20
+            transferBuffer[8]  = 0x14
+            transferBuffer[10] = 0x14
+            transferBuffer[12] = 0x7f
+            transferBuffer[16] = 0x83
+            transferBuffer[18] = 0x01
+            transferBuffer[20] = 0x10
+            transferBuffer[23] = 0xc1
+            transferBuffer[28] = 0x8b
+        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+            transferBuffer[4]  = 0x7d
+            transferBuffer[8]  = 0x81
+            transferBuffer[10] = 0x01
+            transferBuffer[12] = 0x10
+            transferBuffer[15] = 0xc1
+            transferBuffer[20] = 0x89
+        }
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
 
