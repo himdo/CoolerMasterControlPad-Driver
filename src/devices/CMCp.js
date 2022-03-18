@@ -553,12 +553,7 @@ export class CMCp {
     }
 
     async applyLEDModes(mode, brightness=0xff, red=0xff, green=0xff, blue=0xff, ledSpeed=0x04) {
-        if (mode !== LED_CYCLE_ENUM.static && mode !== LED_CYCLE_ENUM['rainbow wave'] && mode !== LED_CYCLE_ENUM.breathing) {
-            console.log('Not Yet Implemented\nExiting for safety')
-            return -1
-        }
-        
-        // OUT 1
+        // Out 1
         let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         transferBuffer[0] = 0x56
@@ -571,10 +566,9 @@ export class CMCp {
         transferBuffer[11] = 0x55
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
-        // out 2
+        // Out 2
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x01
@@ -586,10 +580,9 @@ export class CMCp {
         transferBuffer[11] = 0x55
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
-        // out 3
+        // Out 3
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x02
@@ -597,10 +590,9 @@ export class CMCp {
         transferBuffer[6] = 0x16
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
-        // out 4
+        // Out 4
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x03
@@ -608,10 +600,9 @@ export class CMCp {
         transferBuffer[6] = 0x22
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
-        // out 5
+        // Out 5
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x04
@@ -623,43 +614,64 @@ export class CMCp {
         transferBuffer[11] = 0xbb
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
-        // out 6
+        // Out 6
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x05
-        transferBuffer[4] = 0x03 // 02 for Rb W / Bing
-        transferBuffer[6] = 0x4a // 48 for Rb W / Bing
-
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[4] = 0x03
-            transferBuffer[6] = 0x4a
-
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
-            transferBuffer[4] = 0x02
-            transferBuffer[6] = 0x48
+        transferBuffer[4] = 0x02
+        if (mode === LED_CYCLE_ENUM['static'] || 
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
             
+            transferBuffer[6] = 0x48
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch'] ||
+                   mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+            
+            transferBuffer[6] = 0x4a
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
-        // out 7
+        // Out 7
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x06
         transferBuffer[4] = 0x02
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[6] = 0x57
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] || 
+            mode === LED_CYCLE_ENUM['reactive fade'] || 
+            mode === LED_CYCLE_ENUM['custom']) {
+        
             transferBuffer[6] = 0x55
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch'] ||
+                   mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+        
+            transferBuffer[6] = 0x57
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 8
@@ -671,14 +683,28 @@ export class CMCp {
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
         transferBuffer[11] = 0x55
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[6] = 0x5f 
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+        
             transferBuffer[6] = 0x5d
+        } else if (mode === LED_CYCLE_ENUM['stars']  ||
+                   mode === LED_CYCLE_ENUM['snowing']  ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch'] ||
+                   mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+        
+            transferBuffer[6] = 0x5f
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 9
@@ -690,14 +716,28 @@ export class CMCp {
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
         transferBuffer[11] = 0x55
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[6] = 0x65
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+        
             transferBuffer[6] = 0x63
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch'] ||
+                   mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+        
+            transferBuffer[6] = 0x65
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 10
@@ -705,14 +745,28 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x09
         transferBuffer[4] = 0x02
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[6] = 0x6e
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+        
             transferBuffer[6] = 0x6c
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch'] ||
+                   mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+        
+            transferBuffer[6] = 0x6e
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 11
@@ -724,15 +778,30 @@ export class CMCp {
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
         transferBuffer[11] = 0x55
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[6] = 0x77
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+        
+            transferBuffer[6] = 0x73
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch']) {
 
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
             transferBuffer[6] = 0x75
+        } else if (mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+
+            transferBuffer[6] = 0x77
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 12
@@ -744,15 +813,28 @@ export class CMCp {
         transferBuffer[9] = 0x55
         transferBuffer[10] = 0x55
         transferBuffer[11] = 0x55
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[6] = 0x7e
-
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+        
+            transferBuffer[6] = 0x7a
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch']) {
             transferBuffer[6] = 0x7c
+        } else if (mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+            transferBuffer[6] = 0x7e
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 13
@@ -760,14 +842,30 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x0c
         transferBuffer[4] = 0x02
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[6] = 0x88
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+            
+            transferBuffer[6] = 0x84
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch']) {
+
             transferBuffer[6] = 0x86
+        } else if (mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+
+            transferBuffer[6] = 0x88
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 14
@@ -775,16 +873,37 @@ export class CMCp {
         transferBuffer[1] = 0x15
         transferBuffer[2] = 0x0d
         transferBuffer[4] = 0x01
-        transferBuffer[6] = 0x8d
         transferBuffer[8] = 0xaa
         transferBuffer[9] = 0xaa
         transferBuffer[10] = 0xaa
         transferBuffer[11] = 0xaa
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+
+            transferBuffer[6] = 0x8b
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+        
+            transferBuffer[6] = 0x8d
+        } else if (mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple']) {
+        
+            transferBuffer[6] = 0x8f
+        }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // Out 15
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[5] = 0x01
@@ -809,7 +928,6 @@ export class CMCp {
         transferBuffer[59] = 0xff
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 16
@@ -848,7 +966,6 @@ export class CMCp {
         transferBuffer[63] = 0x80
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 17
@@ -885,7 +1002,6 @@ export class CMCp {
         transferBuffer[63] = 0xff
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 18
@@ -931,7 +1047,6 @@ export class CMCp {
         transferBuffer[58] = 0xff
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 19
@@ -941,7 +1056,29 @@ export class CMCp {
         transferBuffer[16] = 0x25
         transferBuffer[21] = 0x01
         transferBuffer[23] = 0xc1
-        if (mode === LED_CYCLE_ENUM.static) {
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+        
+            transferBuffer[37] = 0x01
+            transferBuffer[39] = 0xc1
+            transferBuffer[52] = 0x14
+            transferBuffer[54] = 0x14
+            transferBuffer[56] = 0x40
+            transferBuffer[60] = 0x44
+            transferBuffer[62] = 0x01
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch'] ||
+                   mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+
             transferBuffer[31] = 0xff
             transferBuffer[37] = 0x40
             transferBuffer[39] = 0x80
@@ -959,19 +1096,10 @@ export class CMCp {
             transferBuffer[56] = 0x10
             transferBuffer[60] = 0x14
             transferBuffer[62] = 0x14
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
-            transferBuffer[37] = 0x01
-            transferBuffer[39] = 0xc1
-            transferBuffer[52] = 0x14
-            transferBuffer[54] = 0x14
-            transferBuffer[56] = 0x40
-            transferBuffer[60] = 0x44
-            transferBuffer[62] = 0x01
         }
-        
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 20
@@ -979,61 +1107,12 @@ export class CMCp {
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x05
         transferBuffer[37] = 0xff
-        
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[4] = 0x40
-            transferBuffer[8] = 0x44
-            transferBuffer[10] = 0x01
-            transferBuffer[13] = 0x01
-            transferBuffer[15] = 0xc1
-            transferBuffer[23] = 0xff
-            transferBuffer[28] = 0x81
-            transferBuffer[29] = 0x40
-            transferBuffer[31] = 0x80
-            transferBuffer[32] = 0x05
-            transferBuffer[33] = 0x10
-            transferBuffer[36] = 0xff
-            transferBuffer[38] = 0xff
-            transferBuffer[39] = 0xff
-            transferBuffer[42] = 0x03
-            transferBuffer[44] = 0x30
-            transferBuffer[45] = 0xff
-            transferBuffer[46] = 0x10
-            transferBuffer[47] = 0x10
-            transferBuffer[48] = 0x01
-            transferBuffer[49] = 0x40
-            transferBuffer[52] = 0x14
-            transferBuffer[54] = 0x14
-            transferBuffer[56] = 0x4d
-            transferBuffer[60] = 0x51
-            transferBuffer[62] = 0x01
-        } else if (mode === LED_CYCLE_ENUM.breathing) {
-            transferBuffer[5] = 0xc1
-            transferBuffer[7] = 0xc1
-            transferBuffer[15] = 0xff
-            transferBuffer[20] = 0x81
-            transferBuffer[21] = 0x40
-            transferBuffer[23] = 0x80
-            transferBuffer[24] = 0x05
-            transferBuffer[25] = 0x10
-            transferBuffer[28] = 0xff
-            transferBuffer[29] = 0xff
-            transferBuffer[31] = 0xff
-            transferBuffer[34] = 0x03
-            transferBuffer[36] = 0x30
-            transferBuffer[38] = 0x10
-            transferBuffer[39] = 0x10
-            transferBuffer[40] = 0x01
-            transferBuffer[41] = 0x40
-            transferBuffer[44] = 0x14
-            transferBuffer[46] = 0x14
-            transferBuffer[48] = 0x4b
-            transferBuffer[52] = 0x4f
-            transferBuffer[54] = 0x01
-            transferBuffer[57] = 0x31
-            transferBuffer[59] = 0xc1
-            transferBuffer[60] = 0x08
-        } else if (mode === LED_CYCLE_ENUM['rainbow wave']) {
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+
             transferBuffer[5] = 0x01
             transferBuffer[7] = 0xc1
             transferBuffer[15] = 0xff
@@ -1059,18 +1138,85 @@ export class CMCp {
             transferBuffer[57] = 0x31
             transferBuffer[59] = 0xc1
             transferBuffer[60] = 0x08
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch'] ||
+                   mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+
+            transferBuffer[4] = 0x40
+            transferBuffer[8] = 0x44
+            transferBuffer[10] = 0x01
+            transferBuffer[13] = 0x01
+            transferBuffer[15] = 0xc1
+            transferBuffer[23] = 0xff
+            transferBuffer[28] = 0x81
+            transferBuffer[29] = 0x40
+            transferBuffer[31] = 0x80
+            transferBuffer[32] = 0x05
+            transferBuffer[33] = 0x10
+            transferBuffer[36] = 0xff
+            transferBuffer[39] = 0xff
+            transferBuffer[42] = 0x03
+            transferBuffer[44] = 0x30
+            transferBuffer[45] = 0xff
+            transferBuffer[46] = 0x10
+            transferBuffer[47] = 0x10
+            transferBuffer[48] = 0x01
+            transferBuffer[49] = 0x40
+            transferBuffer[52] = 0x14
+            transferBuffer[54] = 0x14
+            transferBuffer[56] = 0x4d
+            transferBuffer[60] = 0x51
+            transferBuffer[62] = 0x01
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 21
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x06
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
 
-        if (mode === LED_CYCLE_ENUM.static) {
+            transferBuffer[4] = 0x40
+            transferBuffer[6] = 0xff
+            transferBuffer[7] = 0xff
+            transferBuffer[10] = 0x03
+            transferBuffer[16] = 0x58
+            transferBuffer[21] = 0x30
+            transferBuffer[23] = 0xc1
+            transferBuffer[24] = 0x0c
+            transferBuffer[28] = 0xff
+            transferBuffer[29] = 0xff
+            transferBuffer[30] = 0xff
+            transferBuffer[31] = 0xff
+            transferBuffer[32] = 0x01
+            transferBuffer[34] = 0x04
+            transferBuffer[40] = 0x5e
+            transferBuffer[45] = 0x01
+            transferBuffer[47] = 0xc1
+            transferBuffer[61] = 0x01
+            transferBuffer[63] = 0xc1
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch'] ||
+                   mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
             transferBuffer[5] = 0x31
             transferBuffer[7] = 0xc1
             transferBuffer[8] = 0x08
@@ -1091,45 +1237,102 @@ export class CMCp {
             transferBuffer[48] = 0x60
             transferBuffer[53] = 0x01
             transferBuffer[55] = 0xc1
-            transferBuffer[63] = 0xff
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
-            transferBuffer[4] = 0x40
-            transferBuffer[6] = 0xff
-            transferBuffer[7] = 0xff
-            transferBuffer[10] = 0x03
-            transferBuffer[16] = 0x58
-            transferBuffer[21] = 0x30
-            transferBuffer[23] = 0xc1
-            transferBuffer[24] = 0x0c
-            transferBuffer[28] = 0xff
-            transferBuffer[29] = 0xff
-            transferBuffer[30] = 0xff
-            transferBuffer[31] = 0xff
-            transferBuffer[32] = 0x01
-            transferBuffer[34] = 0x04
-            transferBuffer[40] = 0x5e
-            transferBuffer[45] = 0x01
-            transferBuffer[47] = 0xc1
-            transferBuffer[55] = 0xff
-            transferBuffer[60] = 0x28
-            transferBuffer[61] = 0x80
-            transferBuffer[63] = 0x80
+
+
+            if (mode === LED_CYCLE_ENUM['reactive punch'] ||
+                mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                mode === LED_CYCLE_ENUM['water ripple'] ||
+                mode === LED_CYCLE_ENUM['turn off']) {
+            
+                transferBuffer[63] = 0xff
+            }
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 22
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x07
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[8]  = 0x28
-            transferBuffer[9]  = 0x80
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+        
+            transferBuffer[10] = 0xff
+            transferBuffer[11] = 0xff
+            transferBuffer[16] = 0x14
+            transferBuffer[18] = 0x14
+            transferBuffer[20] = 0x64
+            transferBuffer[24] = 0x68
+            transferBuffer[26] = 0x01
+            transferBuffer[29] = 0x01
+            transferBuffer[31] = 0xc1
+            transferBuffer[44] = 0x6f
+            transferBuffer[49] = 0x83
+            transferBuffer[51] = 0xc1
+            transferBuffer[52] = 0x04
+            transferBuffer[58] = 0xff
+            transferBuffer[59] = 0xff
+            transferBuffer[62] = 0xfd
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing']) {
+            
+            transferBuffer[9] = 0x01
+            transferBuffer[11] = 0xc1
+            transferBuffer[18] = 0xff
+            transferBuffer[19] = 0xff
+            transferBuffer[24] = 0x14
+            transferBuffer[26] = 0x14
+            transferBuffer[28] = 0x66
+            transferBuffer[32] = 0x6a
+            transferBuffer[34] = 0x01
+            transferBuffer[37] = 0x01
+            transferBuffer[39] = 0xc1
+            transferBuffer[52] = 0x71
+            transferBuffer[57] = 0x83
+            transferBuffer[59] = 0xc1
+            transferBuffer[60] = 0x04
+        } else if (mode === LED_CYCLE_ENUM['reactive punch']) {
+            transferBuffer[8] = 0x28
+            transferBuffer[9] = 0x80
             transferBuffer[11] = 0x80
             transferBuffer[12] = 0x07
             transferBuffer[13] = 0x10
+            transferBuffer[16] = 0xff
+            transferBuffer[17] = 0xff
+            transferBuffer[18] = 0xff
+            transferBuffer[19] = 0xff
+            transferBuffer[22] = 0x01
+            transferBuffer[24] = 0x14
+            transferBuffer[26] = 0x14
+            transferBuffer[28] = 0x66
+            transferBuffer[32] = 0x6a
+            transferBuffer[34] = 0x01
+            transferBuffer[37] = 0x01
+            transferBuffer[39] = 0xc1
+            transferBuffer[52] = 0x71
+            transferBuffer[57] = 0x83
+            transferBuffer[59] = 0xc1
+            transferBuffer[60] = 0x04
+        } else if (mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
+            transferBuffer[8] = 0x28
+            transferBuffer[9] = 0x80
+            transferBuffer[11] = 0x80
+            transferBuffer[12] = 0x07
+            transferBuffer[13] = 0x10
+            transferBuffer[16] = 0xff
+            transferBuffer[17] = 0xff
+            transferBuffer[18] = 0xff
             transferBuffer[19] = 0xff
             transferBuffer[22] = 0x01
             transferBuffer[24] = 0x14
@@ -1142,94 +1345,59 @@ export class CMCp {
             transferBuffer[40] = 0x04
             transferBuffer[46] = 0xff
             transferBuffer[47] = 0xff
-            transferBuffer[50] = 0xfd
+            transferBuffer[50] = 0x02
             transferBuffer[53] = 0x80
             transferBuffer[56] = 0x30
             transferBuffer[58] = 0x10
             transferBuffer[60] = 0x71
-        } else if (mode === LED_CYCLE_ENUM.breathing) {
-            transferBuffer[4]  = 0x07
-            transferBuffer[5]  = 0x10
-            transferBuffer[11] = 0xff
-            transferBuffer[14] = 0x01
-            transferBuffer[16] = 0x14
-            transferBuffer[18] = 0x14
-            transferBuffer[20] = 0x64
-            transferBuffer[24] = 0x68
-            transferBuffer[26] = 0x01
-            transferBuffer[29] = 0x34
-            transferBuffer[31] = 0xc1
-            transferBuffer[32] = 0x04
-            transferBuffer[38] = 0xff
-            transferBuffer[39] = 0xff
-            transferBuffer[42] = 0xfd
-            transferBuffer[45] = 0x80
-            transferBuffer[48] = 0x30
-            transferBuffer[50] = 0x10
-            transferBuffer[52] = 0x6f
-            transferBuffer[57] = 0x83
-            transferBuffer[59] = 0xc1
-            transferBuffer[60] = 0x04
-        } else if (mode === LED_CYCLE_ENUM['rainbow wave']) {
-            transferBuffer[4]  = 0x07
-            transferBuffer[8]  = 0x68
-            transferBuffer[10] = 0x01
-            transferBuffer[13] = 0x34
-            transferBuffer[15] = 0xc1
-            transferBuffer[16] = 0x04
-            transferBuffer[21] = 0x10
-            transferBuffer[27] = 0xff
-            transferBuffer[30] = 0x01
-            transferBuffer[32] = 0x14
-            transferBuffer[34] = 0x14
-            transferBuffer[36] = 0x64
-            transferBuffer[38] = 0xff
-            transferBuffer[39] = 0xff
-            transferBuffer[42] = 0xfd
-            transferBuffer[45] = 0x80
-            transferBuffer[48] = 0x30
-            transferBuffer[50] = 0x10
-            transferBuffer[52] = 0x6f
-            transferBuffer[57] = 0x83
-            transferBuffer[59] = 0xc1
-            transferBuffer[60] = 0x04
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 23
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x08
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[5]  = 0x83
-            transferBuffer[7]  = 0xc1
-            transferBuffer[8]  = 0x04
-            transferBuffer[14] = 0xff
-            transferBuffer[15] = 0xff
-            transferBuffer[18] = 0xfd
-            transferBuffer[21] = 0x80
-            transferBuffer[24] = 0x30
-            transferBuffer[26] = 0x10
-            transferBuffer[28] = 0x78
-            transferBuffer[33] = 0x01
-            transferBuffer[35] = 0xc1
-            transferBuffer[43] = 0xff
-            transferBuffer[48] = 0x01
-            transferBuffer[49] = 0x82
-            transferBuffer[51] = 0x80
-            transferBuffer[52] = 0x0c
-            transferBuffer[53] = 0x10
-            transferBuffer[56] = 0xff
-            transferBuffer[57] = 0xff
-            transferBuffer[58] = 0xff
-            transferBuffer[59] = 0xff
-            transferBuffer[62] = 0x06
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
-            transferBuffer[6]  = 0xff
-            transferBuffer[7]  = 0xff
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+        transferBuffer[5] = 0x80
+        transferBuffer[8] = 0x30
+        transferBuffer[10] = 0x10
+        transferBuffer[12] = 0x74
+        transferBuffer[17] = 0x01
+        transferBuffer[19] = 0xc1
+        transferBuffer[27] = 0xff
+        transferBuffer[32] = 0x01
+        transferBuffer[33] = 0x82
+        transferBuffer[35] = 0x80
+        transferBuffer[36] = 0x0c
+        transferBuffer[37] = 0x10
+        transferBuffer[40] = 0xff
+        transferBuffer[41] = 0xff
+        transferBuffer[42] = 0xff
+        transferBuffer[43] = 0xff
+        transferBuffer[46] = 0x06
+        transferBuffer[49] = 0x90
+        transferBuffer[50] = 0x14
+        transferBuffer[51] = 0x20
+        transferBuffer[52] = 0x14
+        transferBuffer[54] = 0x14
+        transferBuffer[56] = 0x7b
+        transferBuffer[60] = 0x7f
+        transferBuffer[62] = 0x01
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch']) {
+
+            transferBuffer[6] = 0xff
+            transferBuffer[7] = 0xff
             transferBuffer[10] = 0xfd
             transferBuffer[13] = 0x80
             transferBuffer[16] = 0x30
@@ -1253,22 +1421,91 @@ export class CMCp {
             transferBuffer[59] = 0x20
             transferBuffer[60] = 0x14
             transferBuffer[62] = 0x14
+        } else if (mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple'] ||
+                   mode === LED_CYCLE_ENUM['turn off']) {
 
+            transferBuffer[5] = 0x83
+            transferBuffer[7] = 0xc1
+            transferBuffer[8] = 0x04
+            transferBuffer[14] = 0xff
+            transferBuffer[15] = 0xff
+            transferBuffer[18] = 0xfd
+            transferBuffer[21] = 0x80
+            transferBuffer[24] = 0x30
+            transferBuffer[26] = 0x10
+            transferBuffer[28] = 0x78
+            transferBuffer[33] = 0x01
+            transferBuffer[35] = 0xc1
+            transferBuffer[43] = 0xff
+            transferBuffer[48] = 0x01
+            transferBuffer[49] = 0x82
+            transferBuffer[51] = 0x80
+            transferBuffer[52] = 0x0c
+            transferBuffer[53] = 0x10
+            transferBuffer[56] = 0xff
+            transferBuffer[57] = 0xff
+            transferBuffer[58] = 0xff
+            transferBuffer[59] = 0xff
+            transferBuffer[62] = 0x06
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 24
         transferBuffer[0] = 0x56
         transferBuffer[1] = 0x21
         transferBuffer[2] = 0x09
-        if (mode === LED_CYCLE_ENUM.static) {
-            transferBuffer[5]  = 0x90
-            transferBuffer[6]  = 0x14
-            transferBuffer[7]  = 0x20
-            transferBuffer[8]  = 0x14
+        if (mode === LED_CYCLE_ENUM['static'] ||
+            mode === LED_CYCLE_ENUM['rainbow wave'] ||
+            mode === LED_CYCLE_ENUM['crosshair'] ||
+            mode === LED_CYCLE_ENUM['reactive fade'] ||
+            mode === LED_CYCLE_ENUM['custom']) {
+        
+            transferBuffer[5] = 0x01
+            transferBuffer[7] = 0xc1
+            transferBuffer[14] = 0xff
+            transferBuffer[15] = 0xff
+            transferBuffer[20] = 0x87
+        } else if (mode === LED_CYCLE_ENUM['stars'] ||
+                   mode === LED_CYCLE_ENUM['snowing'] ||
+                   mode === LED_CYCLE_ENUM['color cycle'] ||
+                   mode === LED_CYCLE_ENUM['breathing'] ||
+                   mode === LED_CYCLE_ENUM['reactive punch']) {
+        
+            transferBuffer[4] = 0x7d
+            transferBuffer[8] = 0x81
+            transferBuffer[10] = 0x01
+            transferBuffer[13] = 0x01
+            transferBuffer[15] = 0xc1
+            transferBuffer[22] = 0xff
+            transferBuffer[23] = 0xff
+            transferBuffer[28] = 0x89
+        } else if (mode === LED_CYCLE_ENUM['circle spectrum'] ||
+                   mode === LED_CYCLE_ENUM['reactive tornado'] ||
+                   mode === LED_CYCLE_ENUM['water ripple']) {
+            
+            transferBuffer[5] = 0x90
+            transferBuffer[6] = 0x14
+            transferBuffer[7] = 0x20
+            transferBuffer[8] = 0x14
+            transferBuffer[10] = 0x14
+            transferBuffer[12] = 0x7f
+            transferBuffer[16] = 0x83
+            transferBuffer[18] = 0x01
+            transferBuffer[21] = 0x01
+            transferBuffer[23] = 0xc1
+            transferBuffer[30] = 0xff
+            transferBuffer[31] = 0xff
+            transferBuffer[36] = 0x8b
+        } else if (mode === LED_CYCLE_ENUM['turn off']) {
+            transferBuffer[5] = 0x90
+            transferBuffer[6] = 0x14
+            transferBuffer[7] = 0x20
+            transferBuffer[8] = 0x14
             transferBuffer[10] = 0x14
             transferBuffer[12] = 0x7f
             transferBuffer[16] = 0x83
@@ -1276,17 +1513,10 @@ export class CMCp {
             transferBuffer[20] = 0x10
             transferBuffer[23] = 0xc1
             transferBuffer[28] = 0x8b
-        } else if (mode === LED_CYCLE_ENUM.breathing || mode === LED_CYCLE_ENUM['rainbow wave']) {
-            transferBuffer[4]  = 0x7d
-            transferBuffer[8]  = 0x81
-            transferBuffer[10] = 0x01
-            transferBuffer[12] = 0x10
-            transferBuffer[15] = 0xc1
-            transferBuffer[20] = 0x89
         }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 25
@@ -1295,7 +1525,6 @@ export class CMCp {
         transferBuffer[2] = 0x0a
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 26
@@ -1303,15 +1532,44 @@ export class CMCp {
         transferBuffer[1] = 0x80
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 27
         transferBuffer[0] = 0x51
         transferBuffer[1] = 0x28
+        transferBuffer[4] = mode
+        
+        // if (mode === LED_CYCLE_ENUM['static']) {
+        // } else if (mode === LED_CYCLE_ENUM['rainbow wave']) {
+        // transferBuffer[4] = 0x01
+        // } else if (mode === LED_CYCLE_ENUM['crosshair']) {
+        // transferBuffer[4] = 0x02
+        // } else if (mode === LED_CYCLE_ENUM['reactive fade']) {
+        // transferBuffer[4] = 0x03
+        // } else if (mode === LED_CYCLE_ENUM['custom']) {
+        // transferBuffer[4] = 0x04
+        // } else if (mode === LED_CYCLE_ENUM['stars']) {
+        // transferBuffer[4] = 0x05
+        // } else if (mode === LED_CYCLE_ENUM['snowing']) {
+        // transferBuffer[4] = 0x06
+        // } else if (mode === LED_CYCLE_ENUM['color cycle']) {
+        // transferBuffer[4] = 0x07
+        // } else if (mode === LED_CYCLE_ENUM['breathing']) {
+        // transferBuffer[4] = 0x08
+        // } else if (mode === LED_CYCLE_ENUM['reactive punch']) {
+        // transferBuffer[4] = 0x09
+        // } else if (mode === LED_CYCLE_ENUM['circle spectrum']) {
+        // transferBuffer[4] = 0x0a
+        // } else if (mode === LED_CYCLE_ENUM['reactive tornado']) {
+        // transferBuffer[4] = 0x0b
+        // } else if (mode === LED_CYCLE_ENUM['water ripple']) {
+        // transferBuffer[4] = 0x0c
+        // } else if (mode === LED_CYCLE_ENUM['turn off']) {
+        // transferBuffer[4] = 0x0d
+        // }
+
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
-
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
         // Out 28
