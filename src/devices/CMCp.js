@@ -182,10 +182,9 @@ export class CMCp {
             transferBuffer[14] = 0x01
             transferBuffer[17] = 0x01
             transferBuffer[19] = 0xc1
-            transferBuffer[27] = 0xff
             transferBuffer[33] = 0x80
             transferBuffer[35] = 0x80
-            transferBuffer[36] = 0x0b
+            transferBuffer[36] = ledSpeed // 0x0b
             transferBuffer[37] = 0x10
             transferBuffer[40] = red // red
             transferBuffer[41] = green // green
@@ -354,6 +353,11 @@ export class CMCp {
             transferBuffer[59] = 0xff
         }
 
+        // transferBuffer[36] = ledSpeed // 0x0b
+        // transferBuffer[24] = 0xff // background red
+        // transferBuffer[25] = 0x22 // background green
+        // transferBuffer[26] = 0x44 // background blue
+        // transferBuffer[27] = 0xaa // background brightness
         return transferBuffer
     }
 
@@ -919,13 +923,17 @@ export class CMCp {
         transferBuffer[33] = 0xff
         transferBuffer[34] = 0xff
         transferBuffer[35] = 0xff
+        // transferBuffer[37] = 0x0d // Not Sure ?Direction?
         transferBuffer[38] = 0x06
         transferBuffer[41] = 0x04
         transferBuffer[42] = 0x08
         transferBuffer[44] = 0x05
         transferBuffer[49] = 0x01
         transferBuffer[51] = 0xc1
-        transferBuffer[59] = 0xff
+        // transferBuffer[56] = 0x12 // Background Red
+        // transferBuffer[57] = 0x60 // Background Green
+        // transferBuffer[58] = 0x00 // Background Blue
+        transferBuffer[59] = 0xff // Background Brightness
         await this.commandTransfer(transferBuffer);
         await this.interruptTransfer(rxBuffer);
         transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
