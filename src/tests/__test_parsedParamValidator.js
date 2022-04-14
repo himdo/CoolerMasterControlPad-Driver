@@ -1,4 +1,4 @@
-import { parsedParamValidator } from '../index.js'
+import { parsedParamValidator } from '../utils.js'
 import { strict } from 'assert'
 
 function testNoTypePassed() {
