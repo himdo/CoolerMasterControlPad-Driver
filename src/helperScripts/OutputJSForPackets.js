@@ -1,4 +1,4 @@
-let hex = "56 21 0a"
+let hex = ""
 
 let hexSplit = hex.split(" ")
 

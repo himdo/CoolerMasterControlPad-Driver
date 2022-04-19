@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node src/tests/__test_parsedParamValidator.js",
+    "debug": "sudo node src/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "usb": "^2.1.2"
   },
-  "type":"module"
+  "type": "module"
 }

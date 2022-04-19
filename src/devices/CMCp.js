@@ -1574,6 +1574,941 @@ export class CMCp {
 
     }
 
+    async applyKeyMap() {
+        let defaultEnding_41_80 = Buffer.alloc(MAX_PACKET_SIZE)
+        defaultEnding_41_80[0] = 0x41
+        defaultEnding_41_80[1] = 0x80
+
+        let defaultEnding_52_90 = Buffer.alloc(MAX_PACKET_SIZE)
+        defaultEnding_52_90[0] = 0x52
+        defaultEnding_52_90[1] = 0x90
+
+        let transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        let rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        // out 1
+        await this.commandTransfer(defaultEnding_41_80);
+        await this.interruptTransfer(rxBuffer);
+        
+        // out 2 - 24
+        for (let i = 0; i < 24; i++) {
+            transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+            rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+            transferBuffer[0] = 0x51
+            transferBuffer[1] = 0x18
+            transferBuffer[2] = i
+            transferBuffer[4] = 0xff
+            transferBuffer[5] = 0x3f
+
+            await this.commandTransfer(transferBuffer);
+            await this.interruptTransfer(rxBuffer);
+
+            await this.commandTransfer(defaultEnding_41_80);
+            await this.interruptTransfer(rxBuffer);
+        }
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+
+        transferBuffer[0] = 51
+        transferBuffer[1] = 20
+        transferBuffer[2] = 35
+        await this.commandTransfer(transferBuffer);
+        await this.interruptTransfer(rxBuffer);
+
+        let secondSpots = [[0x1e], [0x1f], [0x20], [0x21],[0x2b], [0x14], [0x1a], [0x08], [0x39], [0x04], [0x16], [0x07], [0x09], [0xe1], [0x1d], [0x1b], [0x06], [0x19], [0xe0, 0x00, 0xff], [0xc0], [0xe2], [0x2c0, []]]
+        for (let i = 0; i < 24; i++) {
+            transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+            rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+            transferBuffer[0] = 0x51
+            transferBuffer[1] = 0x80
+            transferBuffer[2] = i
+
+            await this.commandTransfer(transferBuffer);
+            await this.interruptTransfer(rxBuffer);
+
+            if (secondSpots[i].length > 0) {
+                transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+                rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+                
+                for (let x = 0; x < secondSpots[i].length; x++) {
+                    transferBuffer[x] = secondSpots[i][x]
+                }
+    
+                await this.commandTransfer(transferBuffer);
+                await this.interruptTransfer(rxBuffer);
+            }
+        }
+
+
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+
+        await this.commandTransfer(defaultEnding_52_90);
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x90
+        transferBuffer[5] = 0x01
+        transferBuffer[6] = 0x02
+        transferBuffer[7] = 0x03
+        transferBuffer[8] = 0x04
+        transferBuffer[9] = 0x05
+        transferBuffer[10] = 0x06
+        transferBuffer[11] = 0x07
+        transferBuffer[12] = 0x08
+        transferBuffer[13] = 0x09
+        transferBuffer[14] = 0x0a
+        transferBuffer[15] = 0x0b
+        transferBuffer[16] = 0x0c
+        transferBuffer[17] = 0x0d
+        transferBuffer[18] = 0x0e
+        transferBuffer[19] = 0x0f
+        transferBuffer[20] = 0x10
+        transferBuffer[21] = 0x11
+        transferBuffer[22] = 0x12
+        transferBuffer[23] = 0x13
+        transferBuffer[24] = 0x14
+        transferBuffer[25] = 0x15
+        transferBuffer[26] = 0x16
+        transferBuffer[27] = 0x17
+        transferBuffer[28] = 0x18
+        transferBuffer[29] = 0x17
+        transferBuffer[31] = 0x1b
+        transferBuffer[32] = 0x1c
+        transferBuffer[33] = 0x1d
+
+        await this.commandTransfer(transferBuffer);
+        await this.interruptTransfer(rxBuffer);
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x20
+        transferBuffer[2] = 0xf6
+        transferBuffer[4] = 0x10
+        transferBuffer[5] = 0x01
+
+        await this.commandTransfer(transferBuffer);
+        await this.interruptTransfer(rxBuffer);
+
+        await this.commandTransfer(defaultEnding_52_90);
+        await this.interruptTransfer(Buffer.alloc(MAX_PACKET_SIZE));
+
+
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x90
+        transferBuffer[5] = 0x01
+        transferBuffer[6] = 0x02
+        transferBuffer[7] = 0x03
+        transferBuffer[8] = 0x04
+        transferBuffer[9] = 0x05
+        transferBuffer[10] = 0x06
+        transferBuffer[11] = 0x07
+        transferBuffer[12] = 0x08
+        transferBuffer[13] = 0x09
+        transferBuffer[14] = 0x0a
+        transferBuffer[15] = 0x0b
+        transferBuffer[16] = 0x0c
+        transferBuffer[17] = 0x0d
+        transferBuffer[18] = 0x0e
+        transferBuffer[19] = 0x0f
+        transferBuffer[20] = 0x10
+        transferBuffer[21] = 0x11
+        transferBuffer[22] = 0x12
+        transferBuffer[23] = 0x13
+        transferBuffer[24] = 0x14
+        transferBuffer[25] = 0x15
+        transferBuffer[26] = 0x16
+        transferBuffer[27] = 0x17
+        transferBuffer[28] = 0x18
+        transferBuffer[29] = 0x17
+        transferBuffer[31] = 0x1b
+        transferBuffer[32] = 0x1c
+        transferBuffer[33] = 0x1d
+
+        await this.commandTransfer(transferBuffer); // 307 json
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x20
+        transferBuffer[2] = 0xf5
+        transferBuffer[4] = 0x10
+        transferBuffer[5] = 0x01
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x20
+        transferBuffer[2] = 0xc6
+        transferBuffer[4] = 0x92
+        transferBuffer[5] = 0x01
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x20
+        transferBuffer[2] = 0xc7
+        transferBuffer[4] = 0x93
+        transferBuffer[5] = 0x01
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x94
+        transferBuffer[4] = 0x35
+        transferBuffer[8] = 0x2b
+        transferBuffer[10] = 0x01
+        transferBuffer[12] = 0x39
+        transferBuffer[14] = 0x02
+        transferBuffer[16] = 0xe1
+        transferBuffer[18] = 0x03
+        transferBuffer[20] = 0xe0
+        transferBuffer[22] = 0x04
+        transferBuffer[24] = 0x1e
+        transferBuffer[26] = 0x05
+        transferBuffer[28] = 0x14
+        transferBuffer[30] = 0x06
+        transferBuffer[32] = 0x04
+        transferBuffer[34] = 0x07
+        transferBuffer[36] = 0x1d
+        transferBuffer[38] = 0x08
+        transferBuffer[40] = 0xc0
+        transferBuffer[42] = 0x09
+        transferBuffer[44] = 0x1f
+        transferBuffer[46] = 0x0a
+        transferBuffer[48] = 0x1a
+        transferBuffer[50] = 0x0b
+        transferBuffer[52] = 0x16
+        transferBuffer[54] = 0x0c
+        transferBuffer[56] = 0x1b
+        transferBuffer[58] = 0x0d
+        transferBuffer[60] = 0xe2
+        transferBuffer[62] = 0x0e
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x94
+        transferBuffer[2] = 0x01
+        transferBuffer[4] = 0x20
+        transferBuffer[6] = 0x0f
+        transferBuffer[8] = 0x08
+        transferBuffer[10] = 0x10
+        transferBuffer[12] = 0x07
+        transferBuffer[14] = 0x11
+        transferBuffer[16] = 0x06
+        transferBuffer[18] = 0x12
+        transferBuffer[20] = 0x2c
+        transferBuffer[22] = 0x13
+        transferBuffer[24] = 0x21
+        transferBuffer[26] = 0x14
+        transferBuffer[28] = 0x15
+        transferBuffer[30] = 0x15
+        transferBuffer[32] = 0x09
+        transferBuffer[34] = 0x16
+        transferBuffer[36] = 0x19
+        transferBuffer[38] = 0x17
+        transferBuffer[40] = 0xff
+        transferBuffer[41] = 0xff
+        transferBuffer[42] = 0xff
+        transferBuffer[43] = 0xff
+        transferBuffer[44] = 0xff
+        transferBuffer[45] = 0xff
+        transferBuffer[46] = 0xff
+        transferBuffer[47] = 0xff
+        transferBuffer[48] = 0xff
+        transferBuffer[49] = 0xff
+        transferBuffer[50] = 0xff
+        transferBuffer[51] = 0xff
+        transferBuffer[52] = 0xff
+        transferBuffer[53] = 0xff
+        transferBuffer[54] = 0xff
+        transferBuffer[55] = 0xff
+        transferBuffer[56] = 0xff
+        transferBuffer[57] = 0xff
+        transferBuffer[58] = 0xff
+        transferBuffer[59] = 0xff
+        transferBuffer[60] = 0xff
+        transferBuffer[61] = 0xff
+        transferBuffer[62] = 0xff
+        transferBuffer[63] = 0xff
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        await this.commandTransfer(defaultEnding_41_80); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x52
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x41
+        transferBuffer[1] = 0x04
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x55
+        transferBuffer[1] = 0x50
+        transferBuffer[2] = 0x28
+        transferBuffer[4] = 0x05
+        transferBuffer[5] = 0x17
+        transferBuffer[6] = 0x1c
+        transferBuffer[7] = 0x1b
+        transferBuffer[8] = 0xff
+        transferBuffer[9] = 0xff
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        await this.commandTransfer(defaultEnding_41_80); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x04
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x01
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x0a
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x02
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x16
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x03
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x22
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x04
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x3f
+        transferBuffer[8] = 0xbb
+        transferBuffer[9] = 0xbb
+        transferBuffer[10] = 0xbb
+        transferBuffer[11] = 0xbb
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x05
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x4a
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x06
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x57
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x07
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x5f
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x08
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x65
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x09
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x6e
+        await this.commandTransfer(transferBuffer); // 367
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x0a
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x77
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x0b
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x7e
+        transferBuffer[8] = 0x55
+        transferBuffer[9] = 0x55
+        transferBuffer[10] = 0x55
+        transferBuffer[11] = 0x55
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x0c
+        transferBuffer[4] = 0x02
+        transferBuffer[6] = 0x88
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x15
+        transferBuffer[2] = 0x0d
+        transferBuffer[4] = 0x01
+        transferBuffer[6] = 0x8d
+        transferBuffer[8] = 0xaa
+        transferBuffer[9] = 0xaa
+        transferBuffer[10] = 0xaa
+        transferBuffer[11] = 0xaa
+        await this.commandTransfer(transferBuffer); // 379
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[5] = 0x01
+        transferBuffer[7] = 0xc1
+        transferBuffer[12] = 0xff
+        transferBuffer[13] = 0xff
+        transferBuffer[14] = 0xff
+        transferBuffer[15] = 0xff
+        transferBuffer[25] = 0x32
+        transferBuffer[27] = 0xc1
+        transferBuffer[28] = 0x17
+        transferBuffer[32] = 0xff
+        transferBuffer[33] = 0xff
+        transferBuffer[34] = 0xff
+        transferBuffer[35] = 0xff
+        transferBuffer[37] = 0x06
+        transferBuffer[38] = 0x01
+        transferBuffer[41] = 0x04
+        transferBuffer[42] = 0x08
+        transferBuffer[44] = 0x05
+        transferBuffer[49] = 0x01
+        transferBuffer[51] = 0xc1
+        transferBuffer[59] = 0xff
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x01
+        transferBuffer[5] = 0x80
+        transferBuffer[7] = 0x80
+        transferBuffer[8] = 0x0b
+        transferBuffer[9] = 0x10
+        transferBuffer[12] = 0xff
+        transferBuffer[13] = 0xff
+        transferBuffer[14] = 0xff
+        transferBuffer[15] = 0xff
+        transferBuffer[18] = 0x02
+        transferBuffer[19] = 0x01
+        transferBuffer[20] = 0x03
+        transferBuffer[24] = 0xff
+        transferBuffer[25] = 0xff
+        transferBuffer[26] = 0xff
+        transferBuffer[27] = 0xff
+        transferBuffer[28] = 0xff
+        transferBuffer[29] = 0xff
+        transferBuffer[30] = 0xff
+        transferBuffer[31] = 0xff
+        transferBuffer[32] = 0x14
+        transferBuffer[34] = 0x14
+        transferBuffer[36] = 0x0b
+        transferBuffer[40] = 0x0f
+        transferBuffer[42] = 0x01
+        transferBuffer[45] = 0x01
+        transferBuffer[47] = 0xc1
+        transferBuffer[54] = 0xc6
+        transferBuffer[55] = 0xff
+        transferBuffer[61] = 0x80
+        transferBuffer[63] = 0x80
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x02
+        transferBuffer[4] = 0x0b
+        transferBuffer[5] = 0x10
+        transferBuffer[8] = 0xff
+        transferBuffer[9] = 0xff
+        transferBuffer[10] = 0xff
+        transferBuffer[11] = 0xff
+        transferBuffer[14] = 0x02
+        transferBuffer[20] = 0x14
+        transferBuffer[22] = 0x14
+        transferBuffer[24] = 0x19
+        transferBuffer[28] = 0x1d
+        transferBuffer[30] = 0x01
+        transferBuffer[32] = 0x80
+        transferBuffer[33] = 0x01
+        transferBuffer[36] = 0xff
+        transferBuffer[42] = 0xff
+        transferBuffer[43] = 0xff
+        transferBuffer[48] = 0xd7
+        transferBuffer[49] = 0x52
+        transferBuffer[50] = 0xff
+        transferBuffer[51] = 0xff
+        transferBuffer[52] = 0xff
+        transferBuffer[54] = 0xff
+        transferBuffer[55] = 0xff
+        transferBuffer[57] = 0xff
+        transferBuffer[58] = 0xff
+        transferBuffer[60] = 0xff
+        transferBuffer[63] = 0xff
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x03
+        transferBuffer[4] = 0xff
+        transferBuffer[6] = 0xff
+        transferBuffer[7] = 0xff
+        transferBuffer[9] = 0xff
+        transferBuffer[10] = 0xff
+        transferBuffer[12] = 0xff
+        transferBuffer[13] = 0xff
+        transferBuffer[15] = 0xff
+        transferBuffer[16] = 0xff
+        transferBuffer[18] = 0xff
+        transferBuffer[19] = 0xff
+        transferBuffer[21] = 0xff
+        transferBuffer[22] = 0xff
+        transferBuffer[24] = 0xff
+        transferBuffer[25] = 0xff
+        transferBuffer[27] = 0xff
+        transferBuffer[28] = 0xff
+        transferBuffer[30] = 0xff
+        transferBuffer[31] = 0xff
+        transferBuffer[33] = 0xff
+        transferBuffer[34] = 0xff
+        transferBuffer[36] = 0xff
+        transferBuffer[37] = 0xff
+        transferBuffer[39] = 0xff
+        transferBuffer[40] = 0xff
+        transferBuffer[42] = 0xff
+        transferBuffer[43] = 0xff
+        transferBuffer[45] = 0xff
+        transferBuffer[46] = 0xff
+        transferBuffer[48] = 0xff
+        transferBuffer[49] = 0xff
+        transferBuffer[51] = 0xff
+        transferBuffer[52] = 0xff
+        transferBuffer[54] = 0xff
+        transferBuffer[55] = 0xff
+        transferBuffer[57] = 0xff
+        transferBuffer[58] = 0xff
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x04
+        transferBuffer[16] = 0x25
+        transferBuffer[21] = 0x01
+        transferBuffer[23] = 0xc1
+        transferBuffer[31] = 0xff
+        transferBuffer[37] = 0x40
+        transferBuffer[39] = 0x80
+        transferBuffer[40] = 0x08
+        transferBuffer[41] = 0x10
+        transferBuffer[44] = 0xff
+        transferBuffer[45] = 0xff
+        transferBuffer[46] = 0xff
+        transferBuffer[47] = 0xff
+        transferBuffer[50] = 0x01
+        transferBuffer[52] = 0x01
+        transferBuffer[53] = 0x10
+        transferBuffer[54] = 0x08
+        transferBuffer[55] = 0x01
+        transferBuffer[56] = 0x10
+        transferBuffer[60] = 0x14
+        transferBuffer[62] = 0x14
+        await this.commandTransfer(transferBuffer); // 394
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x05
+        transferBuffer[4] = 0x40
+        transferBuffer[8] = 0x44
+        transferBuffer[10] = 0x01
+        transferBuffer[13] = 0x01
+        transferBuffer[15] = 0xc1
+        transferBuffer[23] = 0xff
+        transferBuffer[28] = 0x81
+        transferBuffer[29] = 0x40
+        transferBuffer[31] = 0x80
+        transferBuffer[32] = 0x05
+        transferBuffer[33] = 0x10
+        transferBuffer[36] = 0xff
+        transferBuffer[37] = 0xff
+        transferBuffer[38] = 0xff
+        transferBuffer[39] = 0xff
+        transferBuffer[42] = 0x03
+        transferBuffer[44] = 0x30
+        transferBuffer[45] = 0xff
+        transferBuffer[46] = 0x10
+        transferBuffer[47] = 0x10
+        transferBuffer[48] = 0x01
+        transferBuffer[49] = 0x40
+        transferBuffer[52] = 0x14
+        transferBuffer[54] = 0x14
+        transferBuffer[56] = 0x4d
+        transferBuffer[60] = 0x51
+        transferBuffer[62] = 0x01
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x06
+        transferBuffer[5] = 0x31
+        transferBuffer[7] = 0xc1
+        transferBuffer[8] = 0x08
+        transferBuffer[12] = 0x40
+        transferBuffer[14] = 0xff
+        transferBuffer[15] = 0xff
+        transferBuffer[18] = 0x03
+        transferBuffer[24] = 0x5a
+        transferBuffer[29] = 0x30
+        transferBuffer[31] = 0xc1
+        transferBuffer[32] = 0x0c
+        transferBuffer[36] = 0xff
+        transferBuffer[37] = 0xff
+        transferBuffer[38] = 0xff
+        transferBuffer[39] = 0xff
+        transferBuffer[40] = 0x01
+        transferBuffer[42] = 0x04
+        transferBuffer[48] = 0x60
+        transferBuffer[53] = 0x01
+        transferBuffer[55] = 0xc1
+        transferBuffer[63] = 0xff
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x07
+        transferBuffer[8] = 0x28
+        transferBuffer[9] = 0x80
+        transferBuffer[11] = 0x80
+        transferBuffer[12] = 0x07
+        transferBuffer[13] = 0x10
+        transferBuffer[19] = 0xff
+        transferBuffer[22] = 0x01
+        transferBuffer[24] = 0x14
+        transferBuffer[26] = 0x14
+        transferBuffer[28] = 0x66
+        transferBuffer[32] = 0x6a
+        transferBuffer[34] = 0x01
+        transferBuffer[37] = 0x34
+        transferBuffer[39] = 0xc1
+        transferBuffer[40] = 0x04
+        transferBuffer[46] = 0xff
+        transferBuffer[47] = 0xff
+        transferBuffer[50] = 0x02
+        transferBuffer[53] = 0x80
+        transferBuffer[56] = 0x30
+        transferBuffer[58] = 0x10
+        transferBuffer[60] = 0x71
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x08
+        transferBuffer[5] = 0x83
+        transferBuffer[7] = 0xc1
+        transferBuffer[8] = 0x04
+        transferBuffer[14] = 0xff
+        transferBuffer[15] = 0xff
+        transferBuffer[18] = 0xfd
+        transferBuffer[21] = 0x80
+        transferBuffer[24] = 0x30
+        transferBuffer[26] = 0x10
+        transferBuffer[28] = 0x78
+        transferBuffer[33] = 0x01
+        transferBuffer[35] = 0xc1
+        transferBuffer[43] = 0xff
+        transferBuffer[48] = 0x01
+        transferBuffer[49] = 0x82
+        transferBuffer[51] = 0x80
+        transferBuffer[52] = 0x0c
+        transferBuffer[53] = 0x10
+        transferBuffer[56] = 0xff
+        transferBuffer[57] = 0xff
+        transferBuffer[58] = 0xff
+        transferBuffer[59] = 0xff
+        transferBuffer[62] = 0x06
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x09
+        transferBuffer[5] = 0x90
+        transferBuffer[6] = 0x14
+        transferBuffer[7] = 0x20
+        transferBuffer[8] = 0x14
+        transferBuffer[10] = 0x14
+        transferBuffer[12] = 0x7f
+        transferBuffer[16] = 0x83
+        transferBuffer[18] = 0x01
+        transferBuffer[20] = 0x10
+        transferBuffer[23] = 0xc1
+        transferBuffer[28] = 0x8b
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x56
+        transferBuffer[1] = 0x21
+        transferBuffer[2] = 0x0a
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        await this.commandTransfer(defaultEnding_41_80); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x51
+        transferBuffer[1] = 0x28
+        transferBuffer[4] = 0x04
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x41
+        transferBuffer[1] = 0x01
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x50
+        transferBuffer[1] = 0x55
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+        transferBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        rxBuffer = Buffer.alloc(MAX_PACKET_SIZE)
+        transferBuffer[0] = 0x41
+        await this.commandTransfer(transferBuffer); 
+        await this.interruptTransfer(rxBuffer);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
     release () {
         this.iFace.release();
         if (this.hasDetachedKernelDriver) {
